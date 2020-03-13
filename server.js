@@ -1,4 +1,5 @@
 const http = require('http');
+<<<<<<< HEAD
 const app = require('./app');
 
 const port = process.env.PORT || 3000;
@@ -6,4 +7,6 @@ const port = process.env.PORT || 3000;
 const server = http.createServer();
 
 server.listen(port);
+=======
+>>>>>>> FirstBranch
 
