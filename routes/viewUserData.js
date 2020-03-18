@@ -14,6 +14,8 @@ router.get('/expressions', verifyToken, (request, response) => {
 });
 
 router.post('/expressions', verifyToken, async (request, response) => {
+    if(!request.body || !request.body.value)
+        return response.status(400).send("The request body is empty.");
     let resultExpressionId;
     try {
         resultExpressionId = await pool.query("INSERT INTO expressions (e_value) VALUES ($1) RETURNING e_id", [request.body.value]);
@@ -37,6 +39,8 @@ router.post('/expressions', verifyToken, async (request, response) => {
 });
 
 router.delete('/expressions', verifyToken, async (request, response) => {
+    if(!request.body || !request.body.value)
+        return response.status(400).send("The request body is empty.");
     const resultExpressionId = await pool.query("DELETE FROM expressions WHERE e_value = $1 RETURNING e_id", [request.body.value]);
     if(resultExpressionId.rows.length === 0) 
         return response.status(400).send("Expression does not exists.");
