@@ -27,6 +27,7 @@ const validateData = (req, res, next) => {
 
 const loginValidationRules = () => {
     return [
+        body('user_name').isLength({min : 5}),
         body('password').isLength({ min: 5 }),
     ];
 }
