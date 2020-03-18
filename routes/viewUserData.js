@@ -11,7 +11,7 @@ router.get('/expressions', verifyToken, (request, response) => {
     .catch((error) => {
         throw error;
     });
-})
+});
 
 router.post('/expressions', verifyToken, async (request, response) => {
     let resultExpressionId;
@@ -34,8 +34,21 @@ router.post('/expressions', verifyToken, async (request, response) => {
     }catch(error){
         return response.status(400).send("An error occured.");
     }
-})
+});
 
+router.delete('/expressions', verifyToken, async (request, response) => {
+    const resultExpressionId = await pool.query("DELETE FROM expressions WHERE e_value = $1 RETURNING e_id", [request.body.value]);
+    if(resultExpressionId.rows.length === 0) 
+        return response.status(400).send("Expression does not exists.");
+    const expressionId = resultExpressionId.rows[0].e_id;
+    try{
+        await pool.query("DELETE FROM user_expressions WHERE e_id = $1", [expressionId]);
+        return response.status(201).send("Expression deleted.");
+    }
+    catch(error){
+        return response.status(400).send("An error occured.");
+    }
+});
 
 
 module.exports = router;
