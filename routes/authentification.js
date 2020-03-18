@@ -61,7 +61,7 @@ const login = (request, response) => {
                 response.status(400).send('Invalid password!');
 
             //create an assign a token
-            const token = jwt.sign({user_name: user.user_name}, process.env.TOKEN_SECRET);
+            const token = jwt.sign({user_name: user.user_name, user_id: user.id}, process.env.TOKEN_SECRET);
             response.header('auth-token', token).send(token);
         }
     }).catch((error) => {
