@@ -7,10 +7,10 @@ router.get('/expressions', verifyToken, (request, response) => {
     'SELECT expressions.e_id, expressions.e_value FROM expressions INNER JOIN user_expressions ON expressions.e_id = user_expressions.e_id INNER JOIN users ON user_expressions.user_id = users.id WHERE users.user_name = $1';
   pool
     .query(queryString, [request.user.user_name])
-    .then(result => {
+    .then((result) => {
       response.status(200).json(result.rows);
     })
-    .catch(error => {
+    .catch((error) => {
       throw error;
     });
 });
