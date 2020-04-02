@@ -1,6 +1,6 @@
-const { body, validationResult } = require('express-validator');
+import { body, validationResult } from 'express-validator';
 
-const addUserValidationRules = () => {
+export const addUserValidationRules = () => {
   return [
     body('email').isEmail(),
     body('password').isLength({ min: 5 }),
@@ -10,7 +10,7 @@ const addUserValidationRules = () => {
   ];
 };
 
-const validateData = (req, res, next) => {
+export const validateData = (req, res, next) => {
   const errors = validationResult(req);
 
   if (errors.isEmpty()) {
@@ -27,15 +27,9 @@ const validateData = (req, res, next) => {
   });
 };
 
-const loginValidationRules = () => {
+export const loginValidationRules = () => {
   return [
     body('user_name').isLength({ min: 5 }),
     body('password').isLength({ min: 5 }),
   ];
-};
-
-module.exports = {
-  addUserValidationRules,
-  loginValidationRules,
-  validateData,
 };
