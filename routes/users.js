@@ -9,9 +9,9 @@ const router = express.Router();
 const getUsers = async (request, response) => {
   try {
     const users = await User.findAll();
-    response.status(200).send(users);
+    return response.status(200).send(users);
   } catch (error) {
-    console.log(error);
+    return response.status(400).send('An error occured.');
   }
 };
 
@@ -25,8 +25,8 @@ const addUser = async (request, response) => {
       },
     });
 
-    if (foundUser) {
-      response.status(302).json({
+    if (foundUser.length !== 0) {
+      return response.status(302).json({
         status: 'Failure.',
         message: 'User already exists.',
       });
@@ -43,12 +43,12 @@ const addUser = async (request, response) => {
       userName,
     });
 
-    response.status(201).json({
+    return response.status(201).json({
       status: 'Success',
       message: 'User added.',
     });
   } catch (error) {
-    console.log(error);
+    return response.status(400).send('An error occured.');
   }
 };
 
@@ -61,12 +61,12 @@ const deleteUser = async (request, response) => {
         userName,
       },
     });
-    response.status(201).json({
+    return response.status(201).json({
       status: 'Success',
       message: 'User deleted.',
     });
   } catch (error) {
-    console.log(error);
+    return response.status(400).send('An error occured.');
   }
 };
 
@@ -79,8 +79,8 @@ const updateUser = async (request, response) => {
     },
   });
 
-  if (foundUser) {
-    response.status(302).json({
+  if (foundUser.length === 0) {
+    return response.status(302).json({
       status: 'Failure.',
       message: 'User does not exists.',
     });
@@ -95,12 +95,12 @@ const updateUser = async (request, response) => {
         },
       },
     );
-    response.status(201).json({
+    return response.status(201).json({
       status: 'Success',
       message: 'User data updated.',
     });
   } catch (error) {
-    console.log(error);
+    return response.status(400).send('An error occured.');
   }
 };
 
