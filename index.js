@@ -3,9 +3,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 
-import usersRoute from './routes/users';
-import expressionsRoute from './routes/expressions';
-import authRoute from './routes/login';
+import mainRouter from './routes';
 
 const app = express();
 
@@ -13,10 +11,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-app.use('/user', usersRoute);
-app.use('/expressions', expressionsRoute);
-app.use('/user', authRoute);
+app.use('/', mainRouter);
 
 const PORT = process.env.PORT || 3002;
-// Start server
 app.listen(PORT, console.log('Server listening'));
