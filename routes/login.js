@@ -11,20 +11,19 @@ const login = async (request, response) => {
   const { userName, password } = request.body;
 
   try {
-    const foundUser = await User.findAll({
+    const user = await User.findOne({
       where: {
         userName,
       },
     });
 
-    if (foundUser.length === 0) {
-      return response.status(302).json({
+    if (!user) {
+      return response.status(422).json({
         status: 'Failure.',
         message: 'UserName is invalid.',
       });
     }
 
-    const user = foundUser[0];
     const validPassword = await bcrypt.compare(password, user.password);
 
     if (!validPassword) {
