@@ -9,9 +9,10 @@ const router = express.Router();
 const getUsers = async (request, response) => {
   try {
     const users = await User.findAll();
-    response.status(200).send(users);
+
+    return response.status(200).send(users);
   } catch (error) {
-    console.log(error);
+    return response.status(400).send('An error occured.');
   }
 };
 
@@ -19,8 +20,22 @@ const addUser = async (request, response) => {
   const { userName, email, firstName, lastName, password } = request.body;
 
   try {
+    const foundUser = await User.findOne({
+      where: {
+        userName,
+      },
+    });
+
+    if (foundUser) {
+      return response.status(403).json({
+        status: 'Failure.',
+        message: 'User already exists.',
+      });
+    }
+
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
+
     await User.create({
       firstName,
       lastName,
@@ -28,12 +43,13 @@ const addUser = async (request, response) => {
       password: hashPassword,
       userName,
     });
-    response.status(201).json({
+
+    return response.status(201).json({
       status: 'Success',
       message: 'User added.',
     });
   } catch (error) {
-    console.log(error);
+    return response.status(400).send('An error occured.');
   }
 };
 
@@ -46,17 +62,31 @@ const deleteUser = async (request, response) => {
         userName,
       },
     });
-    response.status(201).json({
+
+    return response.status(200).json({
       status: 'Success',
       message: 'User deleted.',
     });
   } catch (error) {
-    console.log(error);
+    return response.status(400).send('An error occured.');
   }
 };
 
 const updateUser = async (request, response) => {
   const { userName, email, firstName, lastName } = request.body;
+
+  const foundUser = await User.findOne({
+    where: {
+      userName,
+    },
+  });
+
+  if (!foundUser) {
+    return response.status(422).json({
+      status: 'Failure.',
+      message: 'User does not exists.',
+    });
+  }
 
   try {
     await User.update(
@@ -67,12 +97,13 @@ const updateUser = async (request, response) => {
         },
       },
     );
-    response.status(201).json({
+
+    return response.status(200).json({
       status: 'Success',
       message: 'User data updated.',
     });
   } catch (error) {
-    console.log(error);
+    return response.status(400).send('An error occured.');
   }
 };
 
