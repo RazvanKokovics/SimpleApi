@@ -1,4 +1,5 @@
 'use strict';
+
 module.exports = (sequelize, DataTypes) => {
   const UserExpression = sequelize.define(
     'UserExpression',
@@ -8,8 +9,5 @@ module.exports = (sequelize, DataTypes) => {
     },
     { timestamps: false },
   );
-  UserExpression.associate = function (models) {
-    // associations can be defined here
-  };
   return UserExpression;
 };

@@ -1,12 +1,13 @@
 require('dotenv').config();
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const app = express();
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
 
 import usersRoute from './routes/users';
 import expressionsRoute from './routes/expressions';
 import authRoute from './routes/login';
+
+const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
