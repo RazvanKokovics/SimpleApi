@@ -29,7 +29,7 @@ export const validateData = (req, res, next) => {
 
 export const loginValidationRules = () => {
   return [
-    body('user_name').isLength({ min: 5 }),
+    body('userName').isLength({ min: 5 }),
     body('password').isLength({ min: 5 }),
   ];
 };
