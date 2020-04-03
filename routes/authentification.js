@@ -4,7 +4,7 @@ const {
   loginValidationRules,
   validateData,
 } = require('../validate.js');
-const { pool } = require('../config');
+const { pool } = require('../config/config');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 

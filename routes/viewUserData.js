@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const verifyToken = require('./verifyToken');
-const { pool } = require('../config');
+const { pool } = require('../config/config');
 
 router.get('/expressions', verifyToken, (request, response) => {
   const queryString =
