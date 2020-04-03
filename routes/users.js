@@ -19,8 +19,22 @@ const addUser = async (request, response) => {
   const { userName, email, firstName, lastName, password } = request.body;
 
   try {
+    const foundUser = await User.findAll({
+      where: {
+        userName,
+      },
+    });
+
+    if (foundUser) {
+      response.status(302).json({
+        status: 'Failure.',
+        message: 'User already exists.',
+      });
+    }
+
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
+
     await User.create({
       firstName,
       lastName,
@@ -28,6 +42,7 @@ const addUser = async (request, response) => {
       password: hashPassword,
       userName,
     });
+
     response.status(201).json({
       status: 'Success',
       message: 'User added.',
@@ -57,6 +72,19 @@ const deleteUser = async (request, response) => {
 
 const updateUser = async (request, response) => {
   const { userName, email, firstName, lastName } = request.body;
+
+  const foundUser = await User.findAll({
+    where: {
+      userName,
+    },
+  });
+
+  if (foundUser) {
+    response.status(302).json({
+      status: 'Failure.',
+      message: 'User does not exists.',
+    });
+  }
 
   try {
     await User.update(
