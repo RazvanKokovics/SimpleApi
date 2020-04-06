@@ -30,12 +30,12 @@ module.exports = {
         userName: {
           type: Sequelize.STRING,
           allowNull: false,
-          unique: 'unique_tag',
+          unique: 'uniqueUsername',
         },
       },
       {
         uniqueKeys: {
-          unique_tag: {
+          uniqueUsername: {
             customIndex: true,
             fields: ['userName'],
           },

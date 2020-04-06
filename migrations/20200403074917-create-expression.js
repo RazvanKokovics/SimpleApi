@@ -13,12 +13,12 @@ module.exports = {
         },
         value: {
           type: Sequelize.STRING,
-          unique: 'unique_tag',
+          unique: 'uniqueExpressionValue',
         },
       },
       {
         uniqueKeys: {
-          unique_tag: {
+          uniqueExpressionValue: {
             customIndex: true,
             fields: ['value'],
           },

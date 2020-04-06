@@ -6,8 +6,10 @@ const router = express.Router();
 
 const addExpression = async (request, response) => {
   try {
-    const { value } = request.body;
-    const { userId } = request.user;
+    const {
+      body: { value },
+      user: { userId },
+    } = request;
 
     const expressionFound = await Expression.findOne({
       where: {

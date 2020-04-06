@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-export default function (request, response, next) {
+export default (request, response, next) => {
   const token = request.header('auth-token');
 
   if (!token) {
@@ -15,4 +15,4 @@ export default function (request, response, next) {
   } catch (err) {
     return response.status(401).send('Invalid token!');
   }
-}
+};
