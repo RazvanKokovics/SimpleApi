@@ -1,64 +1,30 @@
-import { User, Expression, UserExpression } from '../models';
+import {
+  getExpressionByValue,
+  addExpression,
+  addExpressionToUser,
+  getExpressionsByUser,
+  deleteExpression,
+  deleteExpressionFromUsers,
+} from '../repository/expression';
 
 export const insertExpression = async (userId, value) => {
-  try {
-    const expressionFound = await Expression.findOne({
-      where: {
-        value,
-      },
-    });
+  const expressionFound = await getExpressionByValue(value);
 
-    const { id } = expressionFound
-      ? expressionFound
-      : await Expression.create({ value });
+  const { id } = expressionFound ? expressionFound : await addExpression(value);
 
-    return await UserExpression.create({
-      userId,
-      expressionId: id,
-    });
-  } catch (error) {
-    throw new Error(error.message);
-  }
+  return await addExpressionToUser(userId, id);
 };
 
 export const fetchExpressions = async (userId) => {
-  try {
-    const expressions = await User.findByPk(userId, {
-      attributes: [],
-      include: [
-        {
-          model: Expression,
-          as: 'Expressions',
-          required: false,
-          attributes: ['id', 'value'],
-          through: {
-            model: UserExpression,
-            attributes: [],
-          },
-        },
-      ],
-    });
+  const expressions = await getExpressionsByUser(userId);
 
-    return expressions.Expressions;
-  } catch (error) {
-    throw new Error(error.message);
-  }
+  return expressions.Expressions;
 };
 
 export const removeExpression = async (expressionId) => {
-  try {
-    await Expression.destroy({
-      where: {
-        id: expressionId,
-      },
-    });
+  await deleteExpression(expressionId);
 
-    return await UserExpression.destroy({
-      where: {
-        expressionId,
-      },
-    });
-  } catch (error) {
-    throw new Error(error.message);
-  }
+  await deleteExpressionFromUsers(expressionId);
+
+  return;
 };

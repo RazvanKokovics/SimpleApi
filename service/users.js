@@ -1,93 +1,31 @@
 import bcrypt from 'bcryptjs';
 
-import { User } from '../models';
+import { InexistentItem } from '../validators/errors';
+import { addUser, deleteUser, getUsers, updateUser } from '../repository/users';
 
-export const fetchUsers = async () => {
-  try {
-    return await User.findAll();
-  } catch (error) {
-    throw new Error(error.message);
-  }
+export const fetchUsers = () => {
+  return getUsers();
 };
 
 export const insertUser = async (user) => {
-  const { userName, email, firstName, lastName, password } = user;
+  const { password } = user;
 
-  try {
-    const foundUser = await User.findOne({
-      where: {
-        userName,
-      },
-    });
+  const salt = await bcrypt.genSalt(10);
+  const hashPassword = await bcrypt.hash(password, salt);
 
-    if (foundUser) {
-      /*
-      return response.status(403).json({
-        status: 'Failure.',
-        message: 'User already exists.',
-      });
-      */
-    }
+  const userWithHashedPassword = { ...user, password: hashPassword };
 
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(password, salt);
-
-    await User.create({
-      firstName,
-      lastName,
-      email,
-      password: hashPassword,
-      userName,
-    });
-
-    return;
-  } catch (error) {
-    throw new Error(error.message);
-  }
+  return await addUser(userWithHashedPassword);
 };
 
-export const removeUser = async (userName) => {
-  try {
-    await User.destroy({
-      where: {
-        userName,
-      },
-    });
-
-    return;
-  } catch (error) {
-    throw new Error(error.message);
-  }
+export const removeUser = (userName) => {
+  deleteUser(userName);
 };
 
-export const changeUser = async (user) => {
-  const { userName, email, firstName, lastName } = user;
+export const changeUser = (user) => {
+  const updated = updateUser(user);
 
-  const foundUser = await User.findOne({
-    where: {
-      userName,
-    },
-  });
-
-  if (!foundUser) {
-    /*return response.status(422).json({
-      status: 'Failure.',
-      message: 'User does not exists.',
-    });*/
-  }
-
-  try {
-    await User.update(
-      { email, firstName, lastName },
-      {
-        where: {
-          userName,
-        },
-      },
-    );
-
-    return;
-  } catch (error) {
-    throw new Error(error.message);
+  if (!updated[0]) {
+    throw new InexistentItem('Username does not exists.');
   }
 };

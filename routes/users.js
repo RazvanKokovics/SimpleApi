@@ -1,6 +1,5 @@
 import express from 'express';
 
-import { addUserValidationRules, validateData } from '../validators/data';
 import {
   getUsers,
   addUser,
@@ -11,7 +10,7 @@ import {
 const router = express.Router();
 
 router.get('/', getUsers);
-router.post('/register', addUserValidationRules(), validateData, addUser);
+router.post('/register', addUser);
 router.delete('/delete', deleteUser);
 router.put('/update', updateUser);
 

@@ -1,37 +1,24 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-import { User } from '../models';
+import { WrongCredential } from '../validators/errors';
+import { getUserByUserName } from '../repository/login';
 
 export const userLogin = async (userName, password) => {
-  try {
-    const user = await User.findOne({
-      where: {
-        userName,
-      },
-    });
+  const user = await getUserByUserName(userName);
 
-    if (!user) {
-      /*
-      return response.status(422).json({
-        status: 'Failure.',
-        message: 'Username is invalid.',
-      });
-      */
-      //throw error??
-    }
-
-    const validPassword = await bcrypt.compare(password, user.password);
-
-    if (!validPassword) {
-      //return response.status(401).send('Invalid password!');
-    }
-
-    return jwt.sign(
-      { userName: user.userName, userId: user.id },
-      process.env.TOKEN_SECRET,
-    );
-  } catch (error) {
-    throw new Error(error.message);
+  if (!user) {
+    throw new WrongCredential('Username does not exist.');
   }
+
+  const validPassword = await bcrypt.compare(password, user.password);
+
+  if (!validPassword) {
+    throw new WrongCredential('Password is incorrect.');
+  }
+
+  return jwt.sign(
+    { userName: user.userName, userId: user.id },
+    process.env.TOKEN_SECRET,
+  );
 };
