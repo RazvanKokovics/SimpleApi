@@ -10,7 +10,22 @@ module.exports = (sequelize, DataTypes) => {
       password: DataTypes.STRING,
       userName: DataTypes.STRING,
     },
-    { timestamps: false, tableName: 'UsersTable' },
+    {
+      timestamps: false,
+      tableName: 'UsersTable',
+      indexes: [
+        {
+          unique: true,
+          fields: ['userName'],
+        },
+      ],
+    },
   );
+  User.associate = function (models) {
+    User.belongsToMany(models.Expression, {
+      through: 'UserExpression',
+      foreignKey: 'userId',
+    });
+  };
   return User;
 };

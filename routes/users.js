@@ -112,4 +112,4 @@ router.post('/register', addUserValidationRules(), validateData, addUser);
 router.delete('/delete', deleteUser);
 router.put('/update', updateUser);
 
-module.exports = router;
+export default router;
