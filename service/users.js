@@ -22,8 +22,8 @@ export const removeUser = (userName) => {
   deleteUser(userName);
 };
 
-export const changeUser = (user) => {
-  const updated = updateUser(user);
+export const changeUser = async (user) => {
+  const updated = await updateUser(user);
 
   if (!updated[0]) {
     throw new InexistentItem('Username does not exists.');

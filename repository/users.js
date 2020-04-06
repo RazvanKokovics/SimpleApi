@@ -1,7 +1,7 @@
 import { User } from '../models';
 
-export const getUsers = async () => {
-  return await User.findAll();
+export const getUsers = () => {
+  return User.findAll();
 };
 
 export const addUser = async (user) => {
@@ -17,7 +17,7 @@ export const addUser = async (user) => {
 };
 
 export const deleteUser = async (userName) => {
-  return await User.destroy({
+  await User.destroy({
     where: {
       userName,
     },

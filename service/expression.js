@@ -12,19 +12,17 @@ export const insertExpression = async (userId, value) => {
 
   const { id } = expressionFound ? expressionFound : await addExpression(value);
 
-  return await addExpressionToUser(userId, id);
+  await addExpressionToUser(userId, id);
 };
 
 export const fetchExpressions = async (userId) => {
-  const expressions = await getExpressionsByUser(userId);
+  const result = await getExpressionsByUser(userId);
 
-  return expressions.Expressions;
+  const expressions = result ? result.Expressions : [];
+  return expressions;
 };
 
 export const removeExpression = async (expressionId) => {
   await deleteExpression(expressionId);
-
   await deleteExpressionFromUsers(expressionId);
-
-  return;
 };

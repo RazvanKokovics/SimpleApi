@@ -8,9 +8,9 @@ import {
 } from '../service/users';
 import { extractErrors, InexistentItem } from '../validators/errors';
 
-export const getUsers = (response) => {
+export const getUsers = async (request, response) => {
   try {
-    const users = fetchUsers();
+    const users = await fetchUsers();
 
     return response.status(200).send(users);
   } catch (error) {
@@ -18,9 +18,9 @@ export const getUsers = (response) => {
   }
 };
 
-export const addUser = (request, response) => {
+export const addUser = async (request, response) => {
   try {
-    insertUser(request.body);
+    await insertUser(request.body);
 
     return response.status(201).json({
       status: 'Success.',
@@ -42,11 +42,11 @@ export const addUser = (request, response) => {
   }
 };
 
-export const deleteUser = (request, response) => {
+export const deleteUser = async (request, response) => {
   try {
     const { userName } = request.body;
 
-    removeUser(userName);
+    await removeUser(userName);
 
     return response.status(200).json({
       status: 'Success',
@@ -59,7 +59,7 @@ export const deleteUser = (request, response) => {
 
 export const updateUser = async (request, response) => {
   try {
-    changeUser(request.body);
+    await changeUser(request.body);
 
     return response.status(200).json({
       status: 'Success',

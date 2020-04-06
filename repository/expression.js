@@ -13,7 +13,7 @@ export const addExpression = async (value) => {
 };
 
 export const addExpressionToUser = async (userId, expressionId) => {
-  UserExpression.create({
+  await UserExpression.create({
     userId,
     expressionId,
   });
@@ -38,7 +38,7 @@ export const getExpressionsByUser = async (userId) => {
 };
 
 export const deleteExpression = async (id) => {
-  return await Expression.destroy({
+  await Expression.destroy({
     where: {
       id,
     },
@@ -46,7 +46,7 @@ export const deleteExpression = async (id) => {
 };
 
 export const deleteExpressionFromUsers = async (expressionId) => {
-  return await UserExpression.destroy({
+  await UserExpression.destroy({
     where: {
       expressionId,
     },
