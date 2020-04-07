@@ -5,7 +5,7 @@ export const getUsers = () => {
 };
 
 export const addUser = async (user) => {
-  const { userName, email, firstName, lastName, password } = user;
+  const { userName, email, firstName, lastName, password, role } = user;
 
   return await User.create({
     firstName,
@@ -13,6 +13,7 @@ export const addUser = async (user) => {
     email,
     password,
     userName,
+    role,
   });
 };
 

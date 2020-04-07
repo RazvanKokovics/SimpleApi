@@ -1,6 +1,6 @@
 import express from 'express';
 
-import verifyToken from '../validators/token';
+import verifyToken from '../middlewares/tokenMiddleware';
 import {
   addExpression,
   getExpressions,
