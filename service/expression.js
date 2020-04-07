@@ -1,4 +1,5 @@
 import {
+  getAllExpressions,
   getExpressionByValue,
   addExpression,
   addExpressionToUser,
@@ -15,11 +16,11 @@ export const insertExpression = async (userId, value) => {
   await addExpressionToUser(userId, id);
 };
 
-export const fetchExpressions = async (userId) => {
-  const result = await getExpressionsByUser(userId);
+export const fetchExpressions = async (userId, role) => {
+  const result =
+    role === 1 ? await getExpressionsByUser(userId) : await getAllExpressions();
 
-  const expressions = result ? result.Expressions : [];
-  return expressions;
+  return result;
 };
 
 export const removeExpression = async (expressionId) => {

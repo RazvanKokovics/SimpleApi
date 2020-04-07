@@ -1,5 +1,23 @@
 import { User, Expression, UserExpression } from '../models';
 
+export const getAllExpressions = async () => {
+  return await User.findAll({
+    attributes: ['userName'],
+    include: [
+      {
+        model: Expression,
+        as: 'Expressions',
+        required: false,
+        attributes: ['id', 'value'],
+        through: {
+          model: UserExpression,
+          attributes: [],
+        },
+      },
+    ],
+  });
+};
+
 export const getExpressionByValue = async (value) => {
   return await Expression.findOne({
     where: {

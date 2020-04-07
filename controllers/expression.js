@@ -22,9 +22,9 @@ export const addExpression = async (request, response) => {
 
 export const getExpressions = async (request, response) => {
   try {
-    const { userId } = request.user;
+    const { userId, role } = request.user;
 
-    const expressions = await fetchExpressions(userId);
+    const expressions = await fetchExpressions(userId, role);
 
     return response.status(200).json(expressions);
   } catch (error) {
