@@ -54,7 +54,6 @@ class ExpressionController {
         message: 'Expression deleted.',
       });
     } catch (error) {
-      console.log(error);
       return response.status(400).send('An error occured.');
     }
   }
