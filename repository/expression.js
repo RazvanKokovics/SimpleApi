@@ -1,72 +1,82 @@
-import { User, Expression, UserExpression } from '../models';
+import { Expression, User, UserExpression } from '../models';
 
-export const getAllExpressions = async () => {
-  return await User.findAll({
-    attributes: ['userName'],
-    include: [
-      {
-        model: Expression,
-        as: 'Expressions',
-        required: false,
-        attributes: ['id', 'value'],
-        through: {
-          model: UserExpression,
-          attributes: [],
+class ExpressionRepository {
+  constructor(expression, user, userExpression) {
+    this._expression = expression;
+    this._user = user;
+    this._userExpression = userExpression;
+  }
+
+  getAllExpressions() {
+    return this._user.findAll({
+      attributes: ['userName'],
+      include: [
+        {
+          model: this._expression,
+          as: 'Expressions',
+          required: false,
+          attributes: ['id', 'value'],
+          through: {
+            model: this._userExpression,
+            attributes: [],
+          },
         },
+      ],
+    });
+  }
+
+  getExpressionByValue(value) {
+    return this._expression.findOne({
+      where: {
+        value,
       },
-    ],
-  });
-};
+    });
+  }
 
-export const getExpressionByValue = async (value) => {
-  return await Expression.findOne({
-    where: {
-      value,
-    },
-  });
-};
+  addExpression(value) {
+    return this._expression.create({ value });
+  }
 
-export const addExpression = async (value) => {
-  return await Expression.create({ value });
-};
-
-export const addExpressionToUser = async (userId, expressionId) => {
-  await UserExpression.create({
-    userId,
-    expressionId,
-  });
-};
-
-export const getExpressionsByUser = async (userId) => {
-  return await User.findByPk(userId, {
-    attributes: [],
-    include: [
-      {
-        model: Expression,
-        as: 'Expressions',
-        required: false,
-        attributes: ['id', 'value'],
-        through: {
-          model: UserExpression,
-          attributes: [],
-        },
-      },
-    ],
-  });
-};
-
-export const deleteExpression = async (id) => {
-  await Expression.destroy({
-    where: {
-      id,
-    },
-  });
-};
-
-export const deleteExpressionFromUsers = async (expressionId) => {
-  await UserExpression.destroy({
-    where: {
+  addExpressionToUser(userId, expressionId) {
+    return this._userExpression.create({
+      userId,
       expressionId,
-    },
-  });
-};
+    });
+  }
+
+  getExpressionsByUser(userId) {
+    return this._user.findByPk(userId, {
+      attributes: [],
+      include: [
+        {
+          model: this._expression,
+          as: 'Expressions',
+          required: false,
+          attributes: ['id', 'value'],
+          through: {
+            model: this._userExpression,
+            attributes: [],
+          },
+        },
+      ],
+    });
+  }
+
+  deleteExpression(id) {
+    return this._expression.destroy({
+      where: {
+        id,
+      },
+    });
+  }
+
+  deleteExpressionFromUsers(expressionId) {
+    return this._userExpression.destroy({
+      where: {
+        expressionId,
+      },
+    });
+  }
+}
+
+export default new ExpressionRepository(Expression, User, UserExpression);
