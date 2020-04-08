@@ -2,23 +2,33 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import { WrongCredential } from '../validators/errors';
-import { getUserByUserName } from '../repository/login';
+import userRepository from '../repository/users';
 
-export const userLogin = async (userName, password) => {
-  const user = await getUserByUserName(userName);
+class LoginService {
+  constructor(userRepository) {
+    this._userRepository = userRepository;
 
-  if (!user) {
-    throw new WrongCredential('Username does not exist.');
+    this.userLogin = this.userLogin.bind(this);
   }
 
-  const validPassword = await bcrypt.compare(password, user.password);
+  async userLogin(userName, password) {
+    const user = await this._userRepository.getUserByUserName(userName);
 
-  if (!validPassword) {
-    throw new WrongCredential('Password is incorrect.');
+    if (!user) {
+      throw new WrongCredential('Username does not exist.');
+    }
+
+    const validPassword = await bcrypt.compare(password, user.password);
+
+    if (!validPassword) {
+      throw new WrongCredential('Password is incorrect.');
+    }
+
+    return jwt.sign(
+      { userName: user.userName, userId: user.id, role: user.role },
+      process.env.TOKEN_SECRET,
+    );
   }
+}
 
-  return jwt.sign(
-    { userName: user.userName, userId: user.id, role: user.role },
-    process.env.TOKEN_SECRET,
-  );
-};
+export default new LoginService(userRepository);

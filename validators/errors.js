@@ -2,6 +2,7 @@ export class InexistentItem extends Error {
   constructor(message = '', ...args) {
     super(message, ...args);
     this.message = message;
+    this.code = 404;
   }
 }
 
@@ -9,6 +10,7 @@ export class WrongCredential extends Error {
   constructor(message = '', ...args) {
     super(message, ...args);
     this.message = message;
+    this.code = 401;
   }
 }
 

@@ -1,39 +1,44 @@
 import { User } from '../models';
 
-export const getUsers = () => {
-  return User.findAll();
-};
+class UserRepository {
+  constructor(user) {
+    this._user = user;
+  }
 
-export const addUser = async (user) => {
-  const { userName, email, firstName, lastName, password, role } = user;
+  getUsers() {
+    return this._user.findAll();
+  }
 
-  return await User.create({
-    firstName,
-    lastName,
-    email,
-    password,
-    userName,
-    role,
-  });
-};
+  addUser(user) {
+    return this._user.create(user);
+  }
 
-export const deleteUser = async (userName) => {
-  await User.destroy({
-    where: {
-      userName,
-    },
-  });
-};
-
-export const updateUser = async (user) => {
-  const { userName, email, firstName, lastName } = user;
-
-  return await User.update(
-    { email, firstName, lastName },
-    {
+  deleteUser(userName) {
+    this._user.destroy({
       where: {
         userName,
       },
-    },
-  );
-};
+    });
+  }
+
+  updateUser(user) {
+    const { userName } = user;
+
+    return this._user.update(user, {
+      returning: true,
+      where: {
+        userName,
+      },
+    });
+  }
+
+  getUserByUserName(userName) {
+    return this._user.findOne({
+      where: {
+        userName,
+      },
+    });
+  }
+}
+
+export default new UserRepository(User);
