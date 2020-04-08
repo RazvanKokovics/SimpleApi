@@ -1,48 +1,63 @@
-import {
-  insertExpression,
-  fetchExpressions,
-  removeExpression,
-} from '../service/expression';
+import expressionService from '../service/expression';
 
-export const addExpression = async (request, response) => {
-  try {
-    const { value } = request.body;
-    const { userId } = request.user;
+class ExpressionController {
+  constructor(expressionService) {
+    this._expressionService = expressionService;
 
-    await insertExpression(userId, value);
-
-    return response.status(200).json({
-      status: 'Success',
-      message: 'Expression added to user.',
-    });
-  } catch (error) {
-    return response.status(400).send('An error occured.');
+    this.addExpression = this.addExpression.bind(this);
+    this.getExpressions = this.getExpressions.bind(this);
+    this.deleteExpression = this.deleteExpression.bind(this);
   }
-};
 
-export const getExpressions = async (request, response) => {
-  try {
-    const { userId } = request.user;
+  addExpression(request, response) {
+    try {
+      const { value } = request.body;
+      const { userId } = request.user;
 
-    const expressions = await fetchExpressions(userId);
+      const expression = this._expressionService.insertExpression(
+        userId,
+        value,
+      );
 
-    return response.status(200).json(expressions);
-  } catch (error) {
-    return response.status(400).send('An error occured.');
+      return response.status(201).json({
+        status: 'Success',
+        message: 'Expression added to user.',
+        expression,
+      });
+    } catch (error) {
+      return response.status(400).send('An error occured.');
+    }
   }
-};
 
-export const deleteExpression = async (request, response) => {
-  try {
-    const { expressionId } = request.body;
+  async getExpressions(request, response) {
+    try {
+      const { userId } = request.user;
 
-    await removeExpression(expressionId);
+      const expressions = await this._expressionService.fetchExpressions(
+        userId,
+      );
 
-    return response.status(200).json({
-      status: 'Success',
-      message: 'Expression deleted.',
-    });
-  } catch (error) {
-    return response.status(400).send('An error occured.');
+      return response.status(200).json(expressions);
+    } catch (error) {
+      return response.status(400).send('An error occured.');
+    }
   }
-};
+
+  async deleteExpression(request, response) {
+    try {
+      const { expressionId } = request.body;
+
+      await this._expressionService.removeExpression(expressionId);
+
+      return response.status(200).json({
+        status: 'Success',
+        message: 'Expression deleted.',
+      });
+    } catch (error) {
+      console.log(error);
+      return response.status(400).send('An error occured.');
+    }
+  }
+}
+
+export default new ExpressionController(expressionService);

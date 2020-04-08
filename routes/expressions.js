@@ -1,16 +1,13 @@
 import express from 'express';
 
 import verifyToken from '../validators/token';
-import {
-  addExpression,
-  getExpressions,
-  deleteExpression,
-} from '../controllers/expression';
+
+import expressionController from '../controllers/expression';
 
 const router = express.Router();
 
-router.post('/', verifyToken, addExpression);
-router.get('/', verifyToken, getExpressions);
-router.delete('/', verifyToken, deleteExpression);
+router.post('/', verifyToken, expressionController.addExpression);
+router.get('/', verifyToken, expressionController.getExpressions);
+router.delete('/', verifyToken, expressionController.deleteExpression);
 
 export default router;
