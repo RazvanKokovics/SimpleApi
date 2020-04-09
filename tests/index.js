@@ -1,8 +1,5 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import bcrypt from 'bcryptjs';
-
-import { User, Expression, UserExpression } from '../models';
 
 import login from './login';
 import user from './user';

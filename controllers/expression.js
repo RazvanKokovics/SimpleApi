@@ -1,17 +1,6 @@
 import expressionService from '../service/expression';
 
 class ExpressionController {
-<<<<<<< HEAD
-  constructor(expressionService) {
-    this._expressionService = expressionService;
-
-    this.addExpression = this.addExpression.bind(this);
-    this.getExpressions = this.getExpressions.bind(this);
-    this.deleteExpression = this.deleteExpression.bind(this);
-  }
-
-=======
->>>>>>> getExpressionsEndpoint
   async addExpression(request, response) {
     try {
       const { value } = request.body;
@@ -36,7 +25,7 @@ class ExpressionController {
     try {
       const { userId, role } = request.user;
 
-      const expressions = await this._expressionService.fetchExpressions(
+      const expressions = await expressionService.fetchExpressions(
         userId,
         role,
       );
