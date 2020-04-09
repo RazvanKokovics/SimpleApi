@@ -9,12 +9,12 @@ class ExpressionController {
     this.deleteExpression = this.deleteExpression.bind(this);
   }
 
-  addExpression(request, response) {
+  async addExpression(request, response) {
     try {
       const { value } = request.body;
       const { userId } = request.user;
 
-      const expression = this._expressionService.insertExpression(
+      const expression = await this._expressionService.insertExpression(
         userId,
         value,
       );

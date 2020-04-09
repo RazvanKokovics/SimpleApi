@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "nodemon -r esm index.js",
-    "test": "mocha -r esm tests/user.js"
+    "test": "mocha -r esm tests/index.js"
   },
   "repository": {
     "type": "git",
