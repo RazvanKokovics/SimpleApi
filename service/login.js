@@ -5,14 +5,8 @@ import { WrongCredential } from '../validators/errors';
 import userRepository from '../repository/users';
 
 class LoginService {
-  constructor(userRepository) {
-    this._userRepository = userRepository;
-
-    this.userLogin = this.userLogin.bind(this);
-  }
-
   async userLogin(userName, password) {
-    const user = await this._userRepository.getUserByUserName(userName);
+    const user = await userRepository.getUserByUserName(userName);
 
     if (!user) {
       throw new WrongCredential('Username does not exist.');
@@ -31,4 +25,4 @@ class LoginService {
   }
 }
 
-export default new LoginService(userRepository);
+export default new LoginService();

@@ -4,18 +4,9 @@ import { extractErrors, InexistentItem } from '../validators/errors';
 import userService from '../service/users';
 
 class UserController {
-  constructor(userService) {
-    this._userService = userService;
-
-    this.getUsers = this.getUsers.bind(this);
-    this.addUser = this.addUser.bind(this);
-    this.deleteUser = this.deleteUser.bind(this);
-    this.updateUser = this.updateUser.bind(this);
-  }
-
   async getUsers(request, response) {
     try {
-      const users = await this._userService.fetchUsers();
+      const users = await userService.fetchUsers();
 
       return response.status(200).send(users);
     } catch (error) {
@@ -25,7 +16,7 @@ class UserController {
 
   async addUser(request, response) {
     try {
-      const user = await this._userService.insertUser(request.body);
+      const user = await userService.insertUser(request.body);
 
       return response.status(201).json({
         status: 'Success.',
@@ -44,6 +35,7 @@ class UserController {
           message: error.message,
         });
       }
+
       return response.status(400).send('An error occured.');
     }
   }
@@ -52,7 +44,7 @@ class UserController {
     try {
       const { userName } = request.body;
 
-      await this._userService.removeUser(userName);
+      await userService.removeUser(userName);
 
       return response.status(200).json({
         status: 'Success',
@@ -65,7 +57,7 @@ class UserController {
 
   async updateUser(request, response) {
     try {
-      const user = await this._userService.changeUser(request.body);
+      const user = await userService.changeUser(request.body);
 
       return response.status(200).json({
         status: 'Success',
@@ -79,9 +71,10 @@ class UserController {
           message: error.message,
         });
       }
+
       return response.status(400).send('An error occured.');
     }
   }
 }
 
-export default new UserController(userService);
+export default new UserController();
