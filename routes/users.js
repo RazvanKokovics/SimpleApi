@@ -4,9 +4,15 @@ import userController from '../controllers/users';
 
 const router = express.Router();
 
-router.get('/', userController.getUsers);
-router.post('/register', userController.addUser);
-router.delete('/delete', userController.deleteUser);
-router.put('/update', userController.updateUser);
+router.get('/', (req, res, next) => userController.getUsers(req, res, next));
+router.post('/register', (req, res, next) =>
+  userController.addUser(req, res, next),
+);
+router.delete('/delete', (req, res, next) =>
+  userController.deleteUser(req, res, next),
+);
+router.put('/update', (req, res, next) =>
+  userController.updateUser(req, res, next),
+);
 
 export default router;
