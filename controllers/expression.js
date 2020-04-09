@@ -1,20 +1,12 @@
 import expressionService from '../service/expression';
 
 class ExpressionController {
-  constructor(expressionService) {
-    this._expressionService = expressionService;
-
-    this.addExpression = this.addExpression.bind(this);
-    this.getExpressions = this.getExpressions.bind(this);
-    this.deleteExpression = this.deleteExpression.bind(this);
-  }
-
-  addExpression(request, response) {
+  async addExpression(request, response) {
     try {
       const { value } = request.body;
       const { userId } = request.user;
 
-      const expression = this._expressionService.insertExpression(
+      const expression = await expressionService.insertExpression(
         userId,
         value,
       );
@@ -33,9 +25,7 @@ class ExpressionController {
     try {
       const { userId } = request.user;
 
-      const expressions = await this._expressionService.fetchExpressions(
-        userId,
-      );
+      const expressions = await expressionService.fetchExpressions(userId);
 
       return response.status(200).json(expressions);
     } catch (error) {
@@ -47,7 +37,7 @@ class ExpressionController {
     try {
       const { expressionId } = request.body;
 
-      await this._expressionService.removeExpression(expressionId);
+      await expressionService.removeExpression(expressionId);
 
       return response.status(200).json({
         status: 'Success',
@@ -59,4 +49,4 @@ class ExpressionController {
   }
 }
 
-export default new ExpressionController(expressionService);
+export default new ExpressionController();

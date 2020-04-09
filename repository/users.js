@@ -1,20 +1,16 @@
 import { User } from '../models';
 
 class UserRepository {
-  constructor(user) {
-    this._user = user;
-  }
-
   getUsers() {
-    return this._user.findAll();
+    return User.findAll();
   }
 
   addUser(user) {
-    return this._user.create(user);
+    return User.create(user);
   }
 
   deleteUser(userName) {
-    this._user.destroy({
+    User.destroy({
       where: {
         userName,
       },
@@ -24,7 +20,7 @@ class UserRepository {
   updateUser(user) {
     const { userName } = user;
 
-    return this._user.update(user, {
+    return User.update(user, {
       returning: true,
       where: {
         userName,
@@ -33,7 +29,7 @@ class UserRepository {
   }
 
   getUserByUserName(userName) {
-    return this._user.findOne({
+    return User.findOne({
       where: {
         userName,
       },
@@ -41,4 +37,4 @@ class UserRepository {
   }
 }
 
-export default new UserRepository(User);
+export default new UserRepository();

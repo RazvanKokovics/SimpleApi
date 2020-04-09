@@ -1,14 +1,8 @@
 import { Expression, User, UserExpression } from '../models';
 
 class ExpressionRepository {
-  constructor(expression, user, userExpression) {
-    this._expression = expression;
-    this._user = user;
-    this._userExpression = userExpression;
-  }
-
   getExpressionByValue(value) {
-    return this._expression.findOne({
+    return Expression.findOne({
       where: {
         value,
       },
@@ -16,27 +10,27 @@ class ExpressionRepository {
   }
 
   addExpression(value) {
-    return this._expression.create({ value });
+    return Expression.create({ value });
   }
 
   addExpressionToUser(userId, expressionId) {
-    return this._userExpression.create({
+    return UserExpression.create({
       userId,
       expressionId,
     });
   }
 
   getExpressionsByUser(userId) {
-    return this._user.findByPk(userId, {
+    return User.findByPk(userId, {
       attributes: [],
       include: [
         {
-          model: this._expression,
+          model: Expression,
           as: 'Expressions',
           required: false,
           attributes: ['id', 'value'],
           through: {
-            model: this._userExpression,
+            model: UserExpression,
             attributes: [],
           },
         },
@@ -45,7 +39,7 @@ class ExpressionRepository {
   }
 
   deleteExpression(id) {
-    return this._expression.destroy({
+    return Expression.destroy({
       where: {
         id,
       },
@@ -53,7 +47,7 @@ class ExpressionRepository {
   }
 
   deleteExpressionFromUsers(expressionId) {
-    return this._userExpression.destroy({
+    return UserExpression.destroy({
       where: {
         expressionId,
       },
@@ -61,4 +55,4 @@ class ExpressionRepository {
   }
 }
 
-export default new ExpressionRepository(Expression, User, UserExpression);
+export default new ExpressionRepository();
