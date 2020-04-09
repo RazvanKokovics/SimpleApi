@@ -22,7 +22,6 @@ export default () => {
       .send(data)
       .end((error, response) => {
         response.should.have.status(404);
-
         done();
       });
   });

@@ -4,12 +4,8 @@ import { InexistentItem } from '../validators/errors';
 import userRepository from '../repository/users';
 
 class UserService {
-  constructor(userRepository) {
-    this._userRepository = userRepository;
-  }
-
   fetchUsers() {
-    return this._userRepository.getUsers();
+    return userRepository.getUsers();
   }
 
   async insertUser(user) {
@@ -20,15 +16,15 @@ class UserService {
 
     const userWithHashedPassword = { ...user, password: hashPassword };
 
-    return this._userRepository.addUser(userWithHashedPassword);
+    return userRepository.addUser(userWithHashedPassword);
   }
 
   removeUser(userName) {
-    this._userRepository.deleteUser(userName);
+    userRepository.deleteUser(userName);
   }
 
   async changeUser(user) {
-    const updated = await this._userRepository.updateUser(user);
+    const updated = await userRepository.updateUser(user);
 
     if (!updated[0]) {
       throw new InexistentItem('Username does not exists.');
@@ -37,4 +33,4 @@ class UserService {
   }
 }
 
-export default new UserService(userRepository);
+export default new UserService();
