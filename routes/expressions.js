@@ -1,9 +1,8 @@
 import express from 'express';
 
-import verifyToken from '../validators/token';
+import verifyToken from '../middlewares/tokenMiddleware';
 
 import expressionController from '../controllers/expression';
-import e from 'express';
 
 const router = express.Router();
 

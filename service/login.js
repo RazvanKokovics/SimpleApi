@@ -19,7 +19,7 @@ class LoginService {
     }
 
     return jwt.sign(
-      { userName: user.userName, userId: user.id },
+      { userName: user.userName, userId: user.id, role: user.role },
       process.env.TOKEN_SECRET,
     );
   }
