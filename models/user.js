@@ -49,6 +49,14 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      role: {
+        type: DataTypes.INTEGER,
+        defaultValue: 2,
+        validate: {
+          max: 2,
+          min: 1,
+        },
+      },
     },
     {
       timestamps: false,
