@@ -64,10 +64,11 @@ class ExpressionRepository {
     });
   }
 
-  deleteExpressionFromUsers(expressionId) {
+  deleteExpressionFromUser(expressionId, userId) {
     return UserExpression.destroy({
       where: {
         expressionId,
+        userId,
       },
     });
   }

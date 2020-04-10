@@ -1,6 +1,7 @@
 import express from 'express';
 
 import verifyToken from '../middlewares/tokenMiddleware';
+import adminMiddleware from '../middlewares/adminMiddleware';
 
 import expressionController from '../controllers/expression';
 
@@ -13,6 +14,9 @@ router.get('/', verifyToken, (req, res, next) =>
   expressionController.getExpressions(req, res, next),
 );
 router.delete('/', verifyToken, (req, res, next) =>
+  expressionController.deleteExpressionFromUser(req, res, next),
+);
+router.delete('/delete', verifyToken, adminMiddleware, (req, res, next) =>
   expressionController.deleteExpression(req, res, next),
 );
 

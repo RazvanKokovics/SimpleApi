@@ -58,6 +58,29 @@ class ExpressionController {
       return response.status(400).send('An error occured.');
     }
   }
+
+  async deleteExpressionFromUser(request, response) {
+    try {
+      const { expressionId } = request.body;
+      const { userId } = request.user;
+
+      await expressionService.removeExpressionFromUser(expressionId, userId);
+
+      return response.status(200).json({
+        status: 'Success',
+        message: 'Expression deleted from user.',
+      });
+    } catch (error) {
+      if (error instanceof InexistentItem) {
+        return response.status(error.code).json({
+          status: 'Failure',
+          message: error.message,
+        });
+      }
+
+      return response.status(400).send('An error occured.');
+    }
+  }
 }
 
 export default new ExpressionController();
