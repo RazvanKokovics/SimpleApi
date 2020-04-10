@@ -25,7 +25,7 @@ class ExpressionController {
     try {
       const { userId, role } = request.user;
 
-      const expressions = await this._expressionService.fetchExpressions(
+      const expressions = await expressionService.fetchExpressions(
         userId,
         role,
       );

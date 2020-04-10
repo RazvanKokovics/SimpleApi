@@ -18,8 +18,8 @@ class ExpressionService {
   async fetchExpressions(userId, role) {
     const result =
       role === 2
-        ? await this._expressionRepository.getExpressionsByUser(userId)
-        : await this._expressionRepository.getAllExpressions();
+        ? await expressionRepository.getExpressionsByUser(userId)
+        : await expressionRepository.getAllExpressions();
 
     return result;
   }
