@@ -1,4 +1,4 @@
-import { User } from '../models';
+import { Expression, User, UserExpression } from '../models';
 
 class UserRepository {
   getUsers() {
@@ -33,6 +33,24 @@ class UserRepository {
       where: {
         userName,
       },
+    });
+  }
+
+  getUserExpressions(userId) {
+    return User.findByPk(userId, {
+      attributes: [],
+      include: [
+        {
+          model: Expression,
+          as: 'Expressions',
+          required: false,
+          attributes: ['id', 'value'],
+          through: {
+            model: UserExpression,
+            attributes: [],
+          },
+        },
+      ],
     });
   }
 }

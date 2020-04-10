@@ -2,14 +2,13 @@ import { Expression, User, UserExpression } from '../models';
 
 class ExpressionRepository {
   getAllExpressions() {
-    return User.findAll({
-      attributes: ['userName'],
+    return Expression.findAll({
+      attributes: ['id', 'value'],
       include: [
         {
-          model: Expression,
-          as: 'Expressions',
+          model: User,
           required: false,
-          attributes: ['id', 'value'],
+          attributes: ['userName'],
           through: {
             model: UserExpression,
             attributes: [],
@@ -35,24 +34,6 @@ class ExpressionRepository {
     return UserExpression.create({
       userId,
       expressionId,
-    });
-  }
-
-  getExpressionsByUser(userId) {
-    return User.findByPk(userId, {
-      attributes: [],
-      include: [
-        {
-          model: Expression,
-          as: 'Expressions',
-          required: false,
-          attributes: ['id', 'value'],
-          through: {
-            model: UserExpression,
-            attributes: [],
-          },
-        },
-      ],
     });
   }
 
