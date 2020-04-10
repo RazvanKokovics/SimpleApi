@@ -1,5 +1,9 @@
 import expressionRepository from '../repository/expression';
+<<<<<<< HEAD
 import { REGULAR_ROLE } from '../constants';
+=======
+import { InexistentItem } from '../validators/errors';
+>>>>>>> 641600b... Response 404 - deleting inexistent entity.
 
 class ExpressionService {
   async insertExpression(userId, value) {
@@ -26,8 +30,13 @@ class ExpressionService {
   }
 
   async removeExpression(expressionId) {
-    await expressionRepository.deleteExpression(expressionId);
-    await expressionRepository.deleteExpressionFromUsers(expressionId);
+    const deleted = await expressionRepository.deleteExpression(expressionId);
+
+    if (!deleted) {
+      throw new InexistentItem('ExpressionId does not exists.');
+    }
+
+    expressionRepository.deleteExpressionFromUsers(expressionId);
   }
 }
 

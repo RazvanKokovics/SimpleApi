@@ -10,7 +10,7 @@ chai.should();
 const jwt = regularToken;
 
 export default () => {
-  it('it should not delete the expression, 404 not found', async (done) => {
+  it('it should delete the expression', async (done) => {
     const response = await chai
       .request(server)
       .get('/expressions')
@@ -33,6 +33,29 @@ export default () => {
         response.body.should.have
           .property('message')
           .equal('Expression deleted.');
+
+        done();
+      });
+  });
+
+  it('it should not delete the expression, 404 not found', (done) => {
+    const data = {
+      expressionId: 1,
+    };
+
+    chai
+      .request(server)
+      .delete('/expressions')
+      .set('auth-token', jwt)
+      .send(data)
+      .end((error, response) => {
+        response.should.have.status(404);
+
+        response.body.should.be.a('object');
+        response.body.should.have.property('status').equal('Failure');
+        response.body.should.have
+          .property('message')
+          .equal('ExpressionId does not exists.');
 
         done();
       });

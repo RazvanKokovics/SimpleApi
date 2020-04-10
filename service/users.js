@@ -19,7 +19,13 @@ class UserService {
     return userRepository.addUser(userWithHashedPassword);
   }
 
-  removeUser(userName) {
+  async removeUser(userName) {
+    const user = await userRepository.getUserByUserName(userName);
+
+    if (!user) {
+      throw new InexistentItem('Username does not exists.');
+    }
+
     userRepository.deleteUser(userName);
   }
 
@@ -29,6 +35,7 @@ class UserService {
     if (!updated[0]) {
       throw new InexistentItem('Username does not exists.');
     }
+
     return updated[1][0];
   }
 }
