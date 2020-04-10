@@ -1,4 +1,5 @@
 import expressionRepository from '../repository/expression';
+import { InexistentItem } from '../validators/errors';
 
 class ExpressionService {
   async insertExpression(userId, value) {
@@ -25,8 +26,13 @@ class ExpressionService {
   }
 
   async removeExpression(expressionId) {
-    await expressionRepository.deleteExpression(expressionId);
-    await expressionRepository.deleteExpressionFromUsers(expressionId);
+    const deleted = await expressionRepository.deleteExpression(expressionId);
+
+    if (!deleted) {
+      throw new InexistentItem('ExpressionId does not exists.');
+    }
+
+    expressionRepository.deleteExpressionFromUsers(expressionId);
   }
 }
 

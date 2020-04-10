@@ -1,4 +1,5 @@
 import expressionService from '../service/expression';
+import { InexistentItem } from '../validators/errors';
 
 class ExpressionController {
   async addExpression(request, response) {
@@ -47,6 +48,13 @@ class ExpressionController {
         message: 'Expression deleted.',
       });
     } catch (error) {
+      if (error instanceof InexistentItem) {
+        return response.status(error.code).json({
+          status: 'Failure',
+          message: error.message,
+        });
+      }
+
       return response.status(400).send('An error occured.');
     }
   }

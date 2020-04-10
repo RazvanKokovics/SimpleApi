@@ -30,4 +30,27 @@ export default () => {
         done();
       });
   });
+
+  it('it should not delete user, username does not exists', (done) => {
+    const data = {
+      userName: 'inexistent',
+    };
+
+    chai
+      .request(server)
+      .delete('/user/delete')
+      .set('auth-token', jwt)
+      .send(data)
+      .end((error, response) => {
+        response.should.have.status(404);
+
+        response.body.should.be.a('object');
+        response.body.should.have.property('status').equal('Failure.');
+        response.body.should.have
+          .property('message')
+          .equal('Username does not exists.');
+
+        done();
+      });
+  });
 };
