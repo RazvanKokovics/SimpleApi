@@ -64,7 +64,62 @@ class UserController {
 
   async updateUser(request, response) {
     try {
-      const user = await userService.changeUser(request.body);
+      const { userName } = request.body;
+
+      const user = await userService.changeUser(request.body, userName);
+
+      return response.status(200).json({
+        status: 'Success',
+        message: 'User data updated.',
+        user,
+      });
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        return response.status(422).json({
+          status: 'Failure.',
+          message: extractErrors(error),
+        });
+      } else if (error instanceof InexistentItem) {
+        return response.status(error.code).json({
+          status: 'Failure.',
+          message: error.message,
+        });
+      }
+
+      return response.status(400).send('An error occured.');
+    }
+  }
+
+  async deleteHimself(request, response) {
+    try {
+      const { userName } = request.user;
+
+      await userService.removeUser(userName);
+
+      return response.status(200).json({
+        status: 'Success',
+        message: 'User deleted.',
+      });
+    } catch (error) {
+      if (error instanceof InexistentItem) {
+        return response.status(error.code).json({
+          status: 'Failure.',
+          message: error.message,
+        });
+      }
+
+      return response.status(400).send('An error occured.');
+    }
+  }
+
+  async updateHimself(request, response) {
+    try {
+      const { userName } = request.user;
+
+      const user = await userService.changeUser(
+        { ...request.body, role: 2 },
+        userName,
+      );
 
       return response.status(200).json({
         status: 'Success',

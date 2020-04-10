@@ -2,12 +2,9 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 
 import server from '../../index';
-import { adminToken } from '../config';
 
 chai.use(chaiHttp);
 chai.should();
-
-const jwt = adminToken;
 
 export default () => {
   it('it should add an user', (done) => {
@@ -17,13 +14,12 @@ export default () => {
       email: 'admin@vanil.com',
       password: 'password',
       userName: 'regular',
-      role: '2',
+      role: '1',
     };
 
     chai
       .request(server)
       .post('/user/register')
-      .set('auth-token', jwt)
       .send(newUser)
       .end((error, response) => {
         response.should.have.status(201);
@@ -60,7 +56,6 @@ export default () => {
     chai
       .request(server)
       .post('/user/register')
-      .set('auth-token', jwt)
       .send(newUser)
       .end((error, response) => {
         response.should.have.status(422);
@@ -90,7 +85,6 @@ export default () => {
     chai
       .request(server)
       .post('/user/register')
-      .set('auth-token', jwt)
       .send(newUser)
       .end((error, response) => {
         response.should.have.status(422);
@@ -118,7 +112,6 @@ export default () => {
     chai
       .request(server)
       .post('/user/register')
-      .set('auth-token', jwt)
       .send(newUser)
       .end((error, response) => {
         response.should.have.status(422);
@@ -128,29 +121,6 @@ export default () => {
         response.body.should.have
           .property('message')
           .equal('userName must be unique');
-
-        done();
-      });
-  });
-
-  it('it should not add an user, jwt is invalid', (done) => {
-    const newUser = {
-      firstName: 'a',
-      lastName: 'a',
-      email: 'advan@il.com',
-      password: 'password',
-      userName: 'another',
-      role: '1',
-    };
-
-    chai
-      .request(server)
-      .post('/user/register')
-      .set('auth-token', '')
-      .send(newUser)
-      .end((error, response) => {
-        response.should.have.status(401);
-        response.should.have.property('text').equal('Access denied!');
 
         done();
       });

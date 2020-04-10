@@ -1,7 +1,7 @@
-import bcrypt from 'bcryptjs';
-
 import { InexistentItem } from '../validators/errors';
 import userRepository from '../repository/users';
+import expressionRepository from '../repository/expression';
+import { hashPassword } from '../utils';
 
 class UserService {
   fetchUsers() {
@@ -11,12 +11,15 @@ class UserService {
   async insertUser(user) {
     const { password } = user;
 
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(password, salt);
+    const newPassword = await hashPassword(password);
 
-    const userWithHashedPassword = { ...user, password: hashPassword };
+    const updatedUserData = {
+      ...user,
+      password: newPassword,
+      role: 2,
+    };
 
-    return userRepository.addUser(userWithHashedPassword);
+    return userRepository.addUser(updatedUserData);
   }
 
   async removeUser(userName) {
@@ -27,10 +30,17 @@ class UserService {
     }
 
     userRepository.deleteUser(userName);
+    expressionRepository.deleteUserFromExpression(user.id);
   }
 
-  async changeUser(user) {
-    const updated = await userRepository.updateUser(user);
+  async changeUser(user, userName) {
+    const { password } = user;
+
+    const data = password
+      ? { ...user, password: await hashPassword(password), userName }
+      : { ...user, userName };
+
+    const updated = await userRepository.updateUser(data);
 
     if (!updated[0]) {
       throw new InexistentItem('Username does not exists.');

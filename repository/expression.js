@@ -71,6 +71,14 @@ class ExpressionRepository {
       },
     });
   }
+
+  deleteUserFromExpression(userId) {
+    return UserExpression.destroy({
+      where: {
+        userId,
+      },
+    });
+  }
 }
 
 export default new ExpressionRepository();
