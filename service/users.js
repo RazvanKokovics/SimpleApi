@@ -23,7 +23,7 @@ class UserService {
     const user = await userRepository.getUserByUserName(userName);
 
     if (!user) {
-      throw new InexistentItem('Username does not exists.');
+      throw new InexistentItem('The user with this username does not exists.');
     }
 
     return userRepository.deleteUser(userName);
@@ -33,7 +33,7 @@ class UserService {
     const updated = await userRepository.updateUser(user);
 
     if (!updated[0]) {
-      throw new InexistentItem('Username does not exists.');
+      throw new InexistentItem('The user with this username does not exists.');
     }
 
     return updated[1][0];
