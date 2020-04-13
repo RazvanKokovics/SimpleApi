@@ -52,6 +52,22 @@ class ExpressionRepository {
       },
     });
   }
+
+  getUserExpressions(userId) {
+    return Expression.findAll({
+      include: [
+        {
+          model: User,
+          where: { id: userId },
+          attributes: [],
+          through: {
+            model: UserExpression,
+            attributes: [],
+          },
+        },
+      ],
+    });
+  }
 }
 
 export default new ExpressionRepository();

@@ -1,9 +1,9 @@
-import { regularRole } from '../constants';
+import { REGULAR_ROLE } from '../constants';
 
 export default (request, response, next) => {
   const { role } = request.user;
 
-  if (role === regularRole) {
+  if (role === REGULAR_ROLE) {
     return response.status(401).send('Access denied!');
   }
 
