@@ -26,7 +26,7 @@ class UserService {
       throw new InexistentItem('Username does not exists.');
     }
 
-    userRepository.deleteUser(userName);
+    return userRepository.deleteUser(userName);
   }
 
   async changeUser(user) {

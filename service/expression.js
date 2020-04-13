@@ -32,7 +32,7 @@ class ExpressionService {
       throw new InexistentItem('ExpressionId does not exists.');
     }
 
-    expressionRepository.deleteExpressionFromUsers(expressionId);
+    return expressionRepository.deleteExpressionFromUsers(expressionId);
   }
 }
 
