@@ -1,4 +1,4 @@
-import { User } from '../models';
+import { Expression, User, UserExpression } from '../models';
 
 class UserRepository {
   getUsers() {

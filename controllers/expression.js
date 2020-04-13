@@ -23,9 +23,12 @@ class ExpressionController {
 
   async getExpressions(request, response) {
     try {
-      const { userId } = request.user;
+      const { userId, role } = request.user;
 
-      const expressions = await expressionService.fetchExpressions(userId);
+      const expressions = await expressionService.fetchExpressions(
+        userId,
+        role,
+      );
 
       return response.status(200).json(expressions);
     } catch (error) {

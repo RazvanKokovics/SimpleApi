@@ -1,6 +1,23 @@
 import { Expression, User, UserExpression } from '../models';
 
 class ExpressionRepository {
+  getAllExpressions() {
+    return Expression.findAll({
+      attributes: ['id', 'value'],
+      include: [
+        {
+          model: User,
+          required: false,
+          attributes: ['userName'],
+          through: {
+            model: UserExpression,
+            attributes: [],
+          },
+        },
+      ],
+    });
+  }
+
   getExpressionByValue(value) {
     return Expression.findOne({
       where: {
@@ -20,24 +37,6 @@ class ExpressionRepository {
     });
   }
 
-  getExpressionsByUser(userId) {
-    return User.findByPk(userId, {
-      attributes: [],
-      include: [
-        {
-          model: Expression,
-          as: 'Expressions',
-          required: false,
-          attributes: ['id', 'value'],
-          through: {
-            model: UserExpression,
-            attributes: [],
-          },
-        },
-      ],
-    });
-  }
-
   deleteExpression(id) {
     return Expression.destroy({
       where: {
@@ -51,6 +50,22 @@ class ExpressionRepository {
       where: {
         expressionId,
       },
+    });
+  }
+
+  getUserExpressions(userId) {
+    return Expression.findAll({
+      include: [
+        {
+          model: User,
+          where: { id: userId },
+          attributes: [],
+          through: {
+            model: UserExpression,
+            attributes: [],
+          },
+        },
+      ],
     });
   }
 }

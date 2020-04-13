@@ -1,4 +1,5 @@
 import expressionRepository from '../repository/expression';
+import { REGULAR_ROLE } from '../constants';
 
 class ExpressionService {
   async insertExpression(userId, value) {
@@ -15,12 +16,13 @@ class ExpressionService {
     return expression;
   }
 
-  async fetchExpressions(userId) {
-    const result = await expressionRepository.getExpressionsByUser(userId);
+  async fetchExpressions(userId, role) {
+    const result =
+      role === REGULAR_ROLE
+        ? await expressionRepository.getUserExpressions(userId)
+        : await expressionRepository.getAllExpressions();
 
-    const expressions = result ? result.Expressions : [];
-
-    return expressions;
+    return result;
   }
 
   async removeExpression(expressionId) {
