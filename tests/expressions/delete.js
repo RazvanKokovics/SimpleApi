@@ -16,10 +16,10 @@ export default () => {
       .get('/expressions')
       .set('auth-token', jwt);
 
+    console.log(response.body);
     const data = {
-      expressionId: response.body.Expressions[0].id,
+      expressionId: response.body[0].id,
     };
-
     chai
       .request(server)
       .delete('/expressions')
