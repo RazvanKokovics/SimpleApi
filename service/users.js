@@ -13,7 +13,7 @@ class UserService {
 
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
-
+    console.log(hashPassword);
     const userWithHashedPassword = { ...user, password: hashPassword };
 
     return userRepository.addUser(userWithHashedPassword);
