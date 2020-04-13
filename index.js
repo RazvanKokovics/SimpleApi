@@ -15,3 +15,5 @@ app.use('/', mainRouter);
 
 const PORT = process.env.PORT || 3002;
 app.listen(PORT, console.log('Server listening'));
+
+export default app;

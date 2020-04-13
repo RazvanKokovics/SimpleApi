@@ -65,7 +65,12 @@ class UserController {
         user,
       });
     } catch (error) {
-      if (error instanceof InexistentItem) {
+      if (error instanceof ValidationError) {
+        return response.status(422).json({
+          status: 'Failure.',
+          message: extractErrors(error),
+        });
+      } else if (error instanceof InexistentItem) {
         return response.status(error.code).json({
           status: 'Failure.',
           message: error.message,

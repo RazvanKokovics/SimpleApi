@@ -1,4 +1,4 @@
-import { Expression, User, UserExpression } from '../models';
+import { User } from '../models';
 
 class UserRepository {
   getUsers() {
@@ -10,7 +10,7 @@ class UserRepository {
   }
 
   deleteUser(userName) {
-    User.destroy({
+    return User.destroy({
       where: {
         userName,
       },
