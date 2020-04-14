@@ -33,7 +33,7 @@ class ExpressionService {
       throw new InexistentItem('ExpressionId does not exists.');
     }
 
-    expressionRepository.deleteExpressionFromUser(expressionId);
+    return expressionRepository.deleteExpressionFromUser(expressionId);
   }
 
   async removeExpressionFromUser(expressionId, userId) {

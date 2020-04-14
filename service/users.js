@@ -29,8 +29,8 @@ class UserService {
       throw new InexistentItem('Username does not exists.');
     }
 
-    userRepository.deleteUser(userName);
-    expressionRepository.deleteUserFromExpression(user.id);
+    await userRepository.deleteUser(userName);
+    await expressionRepository.deleteUserFromExpression(user.id);
   }
 
   async changeUser(user, userName) {
@@ -43,7 +43,7 @@ class UserService {
     const updated = await userRepository.updateUser(data);
 
     if (!updated[0]) {
-      throw new InexistentItem('Username does not exists.');
+      throw new InexistentItem('The user with this username does not exists.');
     }
 
     return updated[1][0];
