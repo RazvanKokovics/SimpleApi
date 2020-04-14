@@ -30,10 +30,10 @@ class ExpressionService {
     const deleted = await expressionRepository.deleteExpression(expressionId);
 
     if (!deleted) {
-      throw new InexistentItem('ExpressionId does not exists.');
+      throw new InexistentItem('The expression with this id does not exists.');
     }
 
-    expressionRepository.deleteExpressionFromUser(expressionId);
+    return expressionRepository.deleteExpressionFromUser(expressionId);
   }
 
   async removeExpressionFromUser(expressionId, userId) {
