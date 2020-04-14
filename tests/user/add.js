@@ -13,7 +13,7 @@ export default () => {
       lastName: 'admin',
       email: 'admin@vanil.com',
       password: 'password',
-      userName: 'regular',
+      userName: 'AddedUser',
       role: '1',
     };
 
@@ -36,7 +36,7 @@ export default () => {
         response.body.user.should.have
           .property('email')
           .equal('admin@vanil.com');
-        response.body.user.should.have.property('userName').equal('regular');
+        response.body.user.should.have.property('userName').equal('AddedUser');
         response.body.user.should.have.property('role').equal(2);
 
         done();
@@ -105,7 +105,7 @@ export default () => {
       lastName: 'lastName',
       email: 'advan@il.com',
       password: 'password',
-      userName: 'admin',
+      userName: 'AddedUser',
       role: '1',
     };
 

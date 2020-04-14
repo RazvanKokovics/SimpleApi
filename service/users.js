@@ -22,23 +22,23 @@ class UserService {
     return userRepository.addUser(updatedUserData);
   }
 
-  async removeUser(userName) {
-    const user = await userRepository.getUserByUserName(userName);
+  async removeUser(userId) {
+    const user = await userRepository.getUserById(userId);
 
     if (!user) {
-      throw new InexistentItem('Username does not exists.');
+      throw new InexistentItem('UserId does not exists.');
     }
 
-    userRepository.deleteUser(userName);
-    expressionRepository.deleteUserFromExpression(user.id);
+    await userRepository.deleteUser(userId);
+    await expressionRepository.deleteUserFromExpression(userId);
   }
 
-  async changeUser(user, userName) {
+  async changeUser(user, userId) {
     const { password } = user;
 
     const data = password
-      ? { ...user, password: await hashPassword(password), userName }
-      : { ...user, userName };
+      ? { ...user, password: await hashPassword(password), userId }
+      : { ...user, userId };
 
     const updated = await userRepository.updateUser(data);
 

@@ -10,19 +10,23 @@ chai.should();
 const jwt = ADMIN_TOKEN;
 
 export default () => {
-  it('it should update an user, new first and last names, new email', (done) => {
+  it('it should update an user, new first and last names, new email', async (done) => {
+    const response = await chai
+      .request(server)
+      .get('/user')
+      .set('auth-token', jwt);
+
+    const userId = response.body[response.body.length - 1].id;
+
     const newUser = {
       firstName: 'newFirstName',
       lastName: 'newLastName',
       email: 'advan@il.com',
-      password: 'password',
-      userName: 'admin',
-      role: '1',
     };
 
     chai
       .request(server)
-      .put('/user/update')
+      .put('/user/update/' + userId)
       .set('auth-token', jwt)
       .send(newUser)
       .end((error, response) => {
@@ -44,26 +48,27 @@ export default () => {
           .property('lastName')
           .equal('newLastName');
         response.body.user.should.have.property('email').equal('advan@il.com');
-        response.body.user.should.have.property('userName').equal('admin');
-        response.body.user.should.have.property('role').equal(1);
+        response.body.user.should.have.property('userName').equal('AddedUser');
+        response.body.user.should.have.property('role').equal(2);
 
         done();
       });
   });
 
-  it('it should not update an user, username not found', (done) => {
+  it('it should not update an user, userId not found', (done) => {
+    const userId = 200000000;
+
     const newUser = {
       firstName: 'newFirstName',
       lastName: 'newLastName',
       email: 'advan@il.com',
       password: 'password',
-      userName: 'administrator',
       role: '1',
     };
 
     chai
       .request(server)
-      .put('/user/update')
+      .put('/user/update/' + userId)
       .set('auth-token', jwt)
       .send(newUser)
       .end((error, response) => {
@@ -79,19 +84,25 @@ export default () => {
       });
   });
 
-  it('it should not update an user, first and last names too short', (done) => {
+  it('it should not update an user, first and last names too short', async (done) => {
+    const response = await chai
+      .request(server)
+      .get('/user')
+      .set('auth-token', jwt);
+
+    const userId = response.body[response.body.length - 1].id;
+
     const newUser = {
       firstName: 'ne',
       lastName: 'ne',
       email: 'advan@il.com',
       password: 'password',
-      userName: 'admin',
       role: '1',
     };
 
     chai
       .request(server)
-      .put('/user/update')
+      .put('/user/update/' + userId)
       .set('auth-token', jwt)
       .send(newUser)
       .end((error, response) => {
@@ -108,19 +119,25 @@ export default () => {
       });
   });
 
-  it('it should not update an user, email is not an email', (done) => {
+  it('it should not update an user, email is not an email', async (done) => {
+    const response = await chai
+      .request(server)
+      .get('/user')
+      .set('auth-token', jwt);
+
+    const userId = response.body[response.body.length - 1].id;
+
     const newUser = {
       firstName: 'newFirst',
       lastName: 'newLast',
       email: 'advanil.com',
       password: 'password',
-      userName: 'admin',
       role: '1',
     };
 
     chai
       .request(server)
-      .put('/user/update')
+      .put('/user/update/' + userId)
       .set('auth-token', jwt)
       .send(newUser)
       .end((error, response) => {
@@ -136,19 +153,25 @@ export default () => {
       });
   });
 
-  it('it should not update an user, jwt is invalid', (done) => {
+  it('it should not update an user, jwt is invalid', async (done) => {
+    const response = await chai
+      .request(server)
+      .get('/user')
+      .set('auth-token', jwt);
+
+    const userId = response.body[response.body.length - 1].id;
+
     const newUser = {
       firstName: 'newFirst',
       lastName: 'newLast',
       email: 'advanil.com',
       password: 'password',
-      userName: 'admin',
       role: '1',
     };
 
     chai
       .request(server)
-      .put('/user/update')
+      .put('/user/update/' + userId)
       .set('auth-token', '')
       .send(newUser)
       .end((error, response) => {
@@ -168,7 +191,7 @@ export default () => {
 
     chai
       .request(server)
-      .put('/user/update/account')
+      .put('/user/update/account/878')
       .set('auth-token', REGULAR_TOKEN)
       .send(newUser)
       .end((error, response) => {

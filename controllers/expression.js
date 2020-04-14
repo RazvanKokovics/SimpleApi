@@ -39,7 +39,7 @@ class ExpressionController {
 
   async deleteExpression(request, response) {
     try {
-      const { expressionId } = request.body;
+      const { expressionId } = request.params;
 
       await expressionService.removeExpression(expressionId);
 
@@ -61,7 +61,7 @@ class ExpressionController {
 
   async deleteExpressionFromUser(request, response) {
     try {
-      const { expressionId } = request.body;
+      const { expressionId } = request.params;
       const { userId } = request.user;
 
       await expressionService.removeExpressionFromUser(expressionId, userId);

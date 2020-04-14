@@ -3,6 +3,8 @@ import chaiHttp from 'chai-http';
 
 import server from '../../index';
 import { REGULAR_TOKEN } from '../config';
+import expression from '../../repository/expression';
+import equation from '../../repository/equation';
 
 chai.use(chaiHttp);
 chai.should();
@@ -16,15 +18,12 @@ export default () => {
       .get('/expressions')
       .set('auth-token', jwt);
 
-    console.log(response.body);
-    const data = {
-      expressionId: response.body[0].id,
-    };
+    const expressionId = response.body[0].id;
+
     chai
       .request(server)
-      .delete('/expressions')
+      .delete('/expressions/' + expressionId)
       .set('auth-token', jwt)
-      .send(data)
       .end((error, response) => {
         response.should.have.status(200);
 
@@ -39,15 +38,12 @@ export default () => {
   });
 
   it('it should not delete the expression, 404 not found', (done) => {
-    const data = {
-      expressionId: 1,
-    };
+    const expressionId = 1;
 
     chai
       .request(server)
-      .delete('/expressions')
+      .delete('/expressions/' + expressionId)
       .set('auth-token', jwt)
-      .send(data)
       .end((error, response) => {
         response.should.have.status(404);
 

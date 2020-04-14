@@ -42,9 +42,9 @@ class UserController {
 
   async deleteUser(request, response) {
     try {
-      const { userName } = request.body;
+      const { userId } = request.params;
 
-      await userService.removeUser(userName);
+      await userService.removeUser(userId);
 
       return response.status(200).json({
         status: 'Success',
@@ -64,9 +64,9 @@ class UserController {
 
   async updateUser(request, response) {
     try {
-      const { userName } = request.body;
+      const { userId } = request.params;
 
-      const user = await userService.changeUser(request.body, userName);
+      const user = await userService.changeUser(request.body, userId);
 
       return response.status(200).json({
         status: 'Success',
@@ -92,9 +92,9 @@ class UserController {
 
   async deleteHimself(request, response) {
     try {
-      const { userName } = request.user;
+      const { userId } = request.user;
 
-      await userService.removeUser(userName);
+      await userService.removeUser(userId);
 
       return response.status(200).json({
         status: 'Success',
@@ -114,11 +114,11 @@ class UserController {
 
   async updateHimself(request, response) {
     try {
-      const { userName } = request.user;
+      const { userId } = request.user;
 
       const user = await userService.changeUser(
         { ...request.body, role: 2 },
-        userName,
+        userId,
       );
 
       return response.status(200).json({

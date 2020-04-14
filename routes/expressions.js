@@ -13,11 +13,14 @@ router.post('/', verifyToken, (req, res, next) =>
 router.get('/', verifyToken, (req, res, next) =>
   expressionController.getExpressions(req, res, next),
 );
-router.delete('/', verifyToken, (req, res, next) =>
+router.delete('/:expressionId', verifyToken, (req, res, next) =>
   expressionController.deleteExpressionFromUser(req, res, next),
 );
-router.delete('/delete', verifyToken, adminMiddleware, (req, res, next) =>
-  expressionController.deleteExpression(req, res, next),
+router.delete(
+  '/delete/:expressionId',
+  verifyToken,
+  adminMiddleware,
+  (req, res, next) => expressionController.deleteExpression(req, res, next),
 );
 
 export default router;

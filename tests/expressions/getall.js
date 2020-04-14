@@ -19,7 +19,7 @@ export default () => {
         response.should.have.status(200);
 
         response.body.should.be.a('array');
-        response.body.length.should.be.eql(3);
+        response.body.length.should.be.eql(1);
 
         done();
       });

@@ -18,15 +18,12 @@ export default () => {
 
     const length = response.body.length;
 
-    const data = {
-      equationId: response.body[length - 1].id,
-    };
+    const equationId = response.body[length - 1].id;
 
     chai
       .request(server)
-      .delete('/equations')
+      .delete('/equations/' + equationId)
       .set('auth-token', jwt)
-      .send(data)
       .end((error, response) => {
         response.should.have.status(200);
 
@@ -41,15 +38,12 @@ export default () => {
   });
 
   it('it should not delete the equation, 404 not found', (done) => {
-    const data = {
-      equationId: 1000000,
-    };
+    const equationId = 1000000;
 
     chai
       .request(server)
-      .delete('/equations')
+      .delete('/equations/' + equationId)
       .set('auth-token', jwt)
-      .send(data)
       .end((error, response) => {
         response.should.have.status(404);
 
