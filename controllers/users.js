@@ -51,6 +51,13 @@ class UserController {
         message: 'User deleted.',
       });
     } catch (error) {
+      if (error instanceof InexistentItem) {
+        return response.status(error.code).json({
+          status: 'Failure.',
+          message: error.message,
+        });
+      }
+
       return response.status(400).send('An error occured.');
     }
   }
