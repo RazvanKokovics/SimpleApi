@@ -2,27 +2,29 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 
 import server from '../../index';
-import { REGULAR_TOKEN } from '../config';
+import { ADMIN_TOKEN } from '../config';
 
 chai.use(chaiHttp);
 chai.should();
 
-const jwt = REGULAR_TOKEN;
+const jwt = ADMIN_TOKEN;
 
 export default () => {
-  it('it should delete the expression', async (done) => {
+  it('it should delete the equation', async (done) => {
     const response = await chai
       .request(server)
-      .get('/expressions')
+      .get('/equations/all')
       .set('auth-token', jwt);
 
+    const length = response.body.length;
+
     const data = {
-      expressionId: response.body.Expressions[0].id,
+      equationId: response.body[length - 1].id,
     };
 
     chai
       .request(server)
-      .delete('/expressions')
+      .delete('/equations')
       .set('auth-token', jwt)
       .send(data)
       .end((error, response) => {
@@ -32,20 +34,20 @@ export default () => {
         response.body.should.have.property('status').equal('Success');
         response.body.should.have
           .property('message')
-          .equal('Expression deleted from user.');
+          .equal('Equation deleted.');
 
         done();
       });
   });
 
-  it('it should not delete the expression, 404 not found', (done) => {
+  it('it should not delete the equation, 404 not found', (done) => {
     const data = {
-      expressionId: 1,
+      equationId: 1000000,
     };
 
     chai
       .request(server)
-      .delete('/expressions')
+      .delete('/equations')
       .set('auth-token', jwt)
       .send(data)
       .end((error, response) => {
@@ -55,7 +57,7 @@ export default () => {
         response.body.should.have.property('status').equal('Failure');
         response.body.should.have
           .property('message')
-          .equal('The user did not have such an expression.');
+          .equal('The equation with this ID does not exist.');
 
         done();
       });

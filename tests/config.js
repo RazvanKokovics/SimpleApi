@@ -1,4 +1,4 @@
-export const adminToken =
+export const ADMIN_TOKEN =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidXNlcklkIjo1ODAsInJvbGUiOjEsImlhdCI6MTU4NjUwNTI1Mn0.polCIe3fS7LQG0lFZB6kR9R7QRn69IU-bsKSueHwtdo';
-export const regularToken =
+export const REGULAR_TOKEN =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InJlZ3VsYXJVc2VyIiwidXNlcklkIjo1NjEsInJvbGUiOjIsImlhdCI6MTU4NjUwMzE5OH0.4bDZ3DJPl-EsinnZCbUqX_fqK88lukovuiZaWi_E4Fk';

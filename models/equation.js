@@ -31,6 +31,12 @@ module.exports = (sequelize, DataTypes) => {
     {
       timestamps: false,
       tableName: 'EquationsTable',
+      indexes: [
+        {
+          unique: true,
+          fields: ['value'],
+        },
+      ],
     },
   );
   return Equation;

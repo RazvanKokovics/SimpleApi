@@ -2,12 +2,12 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 
 import server from '../../index';
-import { adminToken, regularToken } from '../config';
+import { ADMIN_TOKEN, REGULAR_TOKEN } from '../config';
 
 chai.use(chaiHttp);
 chai.should();
 
-const jwt = adminToken;
+const jwt = ADMIN_TOKEN;
 
 export default () => {
   it('it should update an user, new first and last names, new email', (done) => {
@@ -169,7 +169,7 @@ export default () => {
     chai
       .request(server)
       .put('/user/update/account')
-      .set('auth-token', regularToken)
+      .set('auth-token', REGULAR_TOKEN)
       .send(newUser)
       .end((error, response) => {
         response.should.have.status(200);
@@ -187,7 +187,7 @@ export default () => {
         response.body.user.should.have.property('lastName').equal('newLast');
         response.body.user.should.have
           .property('email')
-          .equal('admin@vanil.com');
+          .equal('newRaz@vanil.com');
         response.body.user.should.have
           .property('userName')
           .equal('regularUser');
