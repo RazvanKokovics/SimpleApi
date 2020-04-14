@@ -26,7 +26,7 @@ class UserService {
     const user = await userRepository.getUserByUserName(userName);
 
     if (!user) {
-      throw new InexistentItem('Username does not exists.');
+      throw new InexistentItem('The user with this username does not exists.');
     }
 
     await userRepository.deleteUser(userName);
