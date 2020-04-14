@@ -10,7 +10,7 @@ class UserRepository {
   }
 
   deleteUser(userName) {
-    User.destroy({
+    return User.destroy({
       where: {
         userName,
       },

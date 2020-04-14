@@ -18,9 +18,8 @@ export default () => {
       .end((error, response) => {
         response.should.have.status(200);
 
-        response.body.should.have.property('Expressions');
-        response.body.Expressions.length.should.be.eql(1);
-
+        response.body.should.be.a('array');
+        response.body.length.should.be.eql(1);
         done();
       });
   });
