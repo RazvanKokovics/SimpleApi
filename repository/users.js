@@ -1,3 +1,5 @@
+import sequelize from 'sequelize';
+
 import { User } from '../models';
 
 class UserRepository {
@@ -41,6 +43,16 @@ class UserRepository {
       where: {
         userName,
       },
+    });
+  }
+
+  getUserStatistic() {
+    return User.findAll({
+      attributes: [
+        'role',
+        [sequelize.fn('COUNT', sequelize.col('role')), 'count'],
+      ],
+      group: 'role',
     });
   }
 }
