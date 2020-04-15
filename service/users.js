@@ -1,42 +1,97 @@
-import bcrypt from 'bcryptjs';
+import { ValidationError, UniqueConstraintError } from 'sequelize';
 
-import { InexistentItem } from '../validators/errors';
+import {
+  InexistentItem,
+  CustomUniqueConstraintError,
+  CustomValidationError,
+  UnexpectedError,
+} from '../validators/errors';
 import userRepository from '../repository/users';
+import expressionRepository from '../repository/expression';
+import { hashPassword } from '../utils';
 
 class UserService {
-  fetchUsers() {
-    return userRepository.getUsers();
+  async fetchUsers() {
+    try {
+      return await userRepository.getUsers();
+    } catch (error) {
+      throw new UnexpectedError();
+    }
   }
 
   async insertUser(user) {
-    const { password } = user;
+    try {
+      const { password } = user;
 
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(password, salt);
+      const newPassword = await hashPassword(password);
 
-    const userWithHashedPassword = { ...user, password: hashPassword };
+      const updatedUserData = {
+        ...user,
+        password: newPassword,
+        role: 2,
+      };
 
-    return userRepository.addUser(userWithHashedPassword);
+      return await userRepository.addUser(updatedUserData);
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        throw new CustomValidationError(error);
+      } else if (error instanceof UniqueConstraintError) {
+        throw new CustomUniqueConstraintError(error.message);
+      }
+
+      throw new UnexpectedError();
+    }
   }
 
   async removeUser(userName) {
-    const user = await userRepository.getUserByUserName(userName);
+    try {
+      const user = await userRepository.getUserByUserName(userName);
 
-    if (!user) {
-      throw new InexistentItem('The user with this username does not exists.');
+      if (!user) {
+        throw new InexistentItem(
+          'The user with this username does not exists.',
+        );
+      }
+
+      await userRepository.deleteUser(userName);
+      await expressionRepository.deleteUserExpressionByUserId(user.id);
+    } catch (error) {
+      if (error instanceof InexistentItem) {
+        throw error;
+      }
+
+      throw new UnexpectedError();
     }
-
-    return userRepository.deleteUser(userName);
   }
 
-  async changeUser(user) {
-    const updated = await userRepository.updateUser(user);
+  async changeUser(user, userName) {
+    try {
+      const { password } = user;
 
-    if (!updated[0]) {
-      throw new InexistentItem('The user with this username does not exists.');
+      const data = password
+        ? { ...user, password: await hashPassword(password), userName }
+        : { ...user, userName };
+
+      const updated = await userRepository.updateUser(data);
+
+      if (!updated[0]) {
+        throw new InexistentItem(
+          'The user with this username does not exists.',
+        );
+      }
+
+      return updated[1][0];
+    } catch (error) {
+      if (error instanceof InexistentItem) {
+        throw error;
+      } else if (error instanceof ValidationError) {
+        throw new CustomValidationError(error);
+      } else if (error instanceof UniqueConstraintError) {
+        throw new CustomUniqueConstraintError(error.message);
+      }
+
+      throw new UnexpectedError();
     }
-
-    return updated[1][0];
   }
 }
 

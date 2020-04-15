@@ -1,5 +1,4 @@
 import expressionService from '../service/expression';
-import { InexistentItem } from '../validators/errors';
 
 class ExpressionController {
   async addExpression(request, response) {
@@ -18,7 +17,7 @@ class ExpressionController {
         expression,
       });
     } catch (error) {
-      return response.status(400).send('An error occured.');
+      return response.status(error.code).send(error.message);
     }
   }
 
@@ -33,7 +32,7 @@ class ExpressionController {
 
       return response.status(200).json(expressions);
     } catch (error) {
-      return response.status(400).send('An error occured.');
+      return response.status(error.code).send(error.message);
     }
   }
 
@@ -48,14 +47,23 @@ class ExpressionController {
         message: 'Expression deleted.',
       });
     } catch (error) {
-      if (error instanceof InexistentItem) {
-        return response.status(error.code).json({
-          status: 'Failure',
-          message: error.message,
-        });
-      }
+      return response.status(error.code).send(error.message);
+    }
+  }
 
-      return response.status(400).send('An error occured.');
+  async deleteExpressionFromUser(request, response) {
+    try {
+      const { expressionId } = request.body;
+      const { userId } = request.user;
+
+      await expressionService.removeExpressionFromUser(expressionId, userId);
+
+      return response.status(200).json({
+        status: 'Success',
+        message: 'Expression deleted from user.',
+      });
+    } catch (error) {
+      return response.status(error.code).send(error.message);
     }
   }
 }

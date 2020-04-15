@@ -2,7 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 
 import server from '../../index';
-import { adminToken } from '../config';
+import { adminToken, regularToken } from '../config';
 
 chai.use(chaiHttp);
 chai.should();
@@ -154,6 +154,44 @@ export default () => {
       .end((error, response) => {
         response.should.have.status(401);
         response.should.have.property('text').equal('Access denied!');
+
+        done();
+      });
+  });
+
+  it('it should update himself (user)', (done) => {
+    const newUser = {
+      firstName: 'newFirst',
+      lastName: 'newLast',
+      role: '1',
+    };
+
+    chai
+      .request(server)
+      .put('/user/update/account')
+      .set('auth-token', regularToken)
+      .send(newUser)
+      .end((error, response) => {
+        response.should.have.status(200);
+
+        response.body.should.be.a('object');
+        response.body.should.have.property('status').equal('Success');
+        response.body.should.have
+          .property('message')
+          .equal('User data updated.');
+
+        response.body.user.should.have.property('password');
+        response.body.user.should.have.property('id');
+
+        response.body.user.should.have.property('firstName').equal('newFirst');
+        response.body.user.should.have.property('lastName').equal('newLast');
+        response.body.user.should.have
+          .property('email')
+          .equal('admin@vanil.com');
+        response.body.user.should.have
+          .property('userName')
+          .equal('regularUser');
+        response.body.user.should.have.property('role').equal(2);
 
         done();
       });
