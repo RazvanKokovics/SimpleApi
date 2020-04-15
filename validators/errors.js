@@ -1,3 +1,12 @@
+const extractErrors = (error) => {
+  const { errors } = error;
+  const extractedMessages = [];
+
+  errors.map((error) => extractedMessages.push(error.message));
+
+  return extractedMessages.join(' ');
+};
+
 export class InexistentItem extends Error {
   constructor(message = '', ...args) {
     super(message, ...args);
@@ -14,11 +23,26 @@ export class WrongCredential extends Error {
   }
 }
 
-export const extractErrors = (error) => {
-  const { errors } = error;
-  const extractedMessages = [];
+export class CustomValidationError extends Error {
+  constructor(message = '', ...args) {
+    super(message, ...args);
+    this.message = extractErrors(message);
+    this.code = 422;
+  }
+}
 
-  errors.map((error) => extractedMessages.push(error.message));
+export class CustomUniqueConstraintError extends Error {
+  constructor(message = '', ...args) {
+    super(message, ...args);
+    this.message = message;
+    this.code = 409;
+  }
+}
 
-  return extractedMessages.join(' ');
-};
+export class UnexpectedError extends Error {
+  constructor(message = 'An error occured.', ...args) {
+    super(message, ...args);
+    this.message = message;
+    this.code = 400;
+  }
+}
