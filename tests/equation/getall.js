@@ -1,4 +1,3 @@
-require('dotenv').config();
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 
@@ -11,25 +10,25 @@ chai.should();
 const jwt = ADMIN_TOKEN;
 
 export default () => {
-  it('it should get all the users', (done) => {
+  it('it should get all the equations', (done) => {
     chai
       .request(server)
-      .get('/user')
+      .get('/equations/all')
       .set('auth-token', jwt)
       .end((error, response) => {
         response.should.have.status(200);
 
         response.body.should.be.a('array');
-        response.body.length.should.be.eql(4);
+        response.body.length.should.be.eql(1);
 
         done();
       });
   });
 
-  it('it should not get all the users, jwt invalid', (done) => {
+  it('it should not get all the equations, invalid token', (done) => {
     chai
       .request(server)
-      .get('/user')
+      .get('/equations/all')
       .set('auth-token', '')
       .end((error, response) => {
         response.should.have.status(401);

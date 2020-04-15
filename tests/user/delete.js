@@ -2,12 +2,12 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 
 import server from '../../index';
-import { adminToken } from '../config';
+import { ADMIN_TOKEN } from '../config';
 
 chai.use(chaiHttp);
 chai.should();
 
-const jwt = adminToken;
+const jwt = ADMIN_TOKEN;
 
 export default () => {
   it('it should delete user', (done) => {

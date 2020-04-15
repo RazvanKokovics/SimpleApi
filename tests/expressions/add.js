@@ -2,12 +2,12 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 
 import server from '../../index';
-import { regularToken } from '../config';
+import { REGULAR_TOKEN } from '../config';
 
 chai.use(chaiHttp);
 chai.should();
 
-const jwt = regularToken;
+const jwt = REGULAR_TOKEN;
 
 export default () => {
   it('it should add an expression', (done) => {
