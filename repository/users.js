@@ -1,6 +1,6 @@
 import sequelize from 'sequelize';
 
-import { User } from '../models';
+import { User, UserExpression } from '../models';
 
 class UserRepository {
   getUsers() {
@@ -46,13 +46,23 @@ class UserRepository {
     });
   }
 
-  getUserStatistic() {
+  getUserRoleStatistic() {
     return User.findAll({
       attributes: [
         'role',
         [sequelize.fn('COUNT', sequelize.col('role')), 'count'],
       ],
       group: 'role',
+    });
+  }
+
+  getUserExpressionsStatisticByUser() {
+    return UserExpression.findAll({
+      attributes: [
+        'userId',
+        [sequelize.fn('COUNT', sequelize.col('userId')), 'count'],
+      ],
+      group: 'userId',
     });
   }
 }
