@@ -45,7 +45,7 @@ class ExpressionRepository {
     });
   }
 
-  deleteExpressionFromUser(expressionId, userId) {
+  deleteUserExpressionByExpressionIdAndUserId(expressionId, userId) {
     return UserExpression.destroy({
       where: {
         expressionId,
@@ -54,10 +54,10 @@ class ExpressionRepository {
     });
   }
 
-  deleteUserFromExpression(userId) {
+  deleteUserExpressionByExpressionId(expressionId) {
     return UserExpression.destroy({
       where: {
-        userId,
+        expressionId,
       },
     });
   }
@@ -75,6 +75,14 @@ class ExpressionRepository {
           },
         },
       ],
+    });
+  }
+
+  deleteUserExpressionByUserId(userId) {
+    return UserExpression.destroy({
+      where: {
+        userId,
+      },
     });
   }
 }
