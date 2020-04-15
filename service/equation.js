@@ -1,46 +1,95 @@
+import { ValidationError, UniqueConstraintError } from 'sequelize';
+
 import equationRepository from '../repository/equation';
-import { InexistentItem } from '../validators/errors';
+import {
+  InexistentItem,
+  CustomUniqueConstraintError,
+  CustomValidationError,
+  UnexpectedError,
+} from '../validators/errors';
 
 class EquationService {
-  insertEquation(equation) {
-    return equationRepository.addEquation(equation);
+  async insertEquation(equation) {
+    try {
+      return await equationRepository.addEquation(equation);
+    } catch (error) {
+      if (error instanceof UniqueConstraintError) {
+        throw new CustomUniqueConstraintError(error.message);
+      }
+      if (error instanceof ValidationError) {
+        throw new CustomValidationError(error);
+      }
+
+      throw new UnexpectedError();
+    }
   }
 
-  getRandomEquation() {
-    return equationRepository.getRandomEquation();
+  async getRandomEquation() {
+    try {
+      return await equationRepository.getRandomEquation();
+    } catch (error) {
+      throw new UnexpectedError();
+    }
   }
 
   async removeEquation(equationId) {
-    const removed = await equationRepository.deleteEquation(equationId);
+    try {
+      const removed = await equationRepository.deleteEquation(equationId);
 
-    if (!removed) {
-      throw new InexistentItem('The equation with this ID does not exist.');
+      if (!removed) {
+        throw new InexistentItem('The equation with this ID does not exist.');
+      }
+    } catch (error) {
+      if (error instanceof InexistentItem) {
+        throw error;
+      }
+
+      throw new UnexpectedError();
     }
   }
 
-  getAll() {
-    return equationRepository.getAllEquations();
+  async getAll() {
+    try {
+      return await equationRepository.getAllEquations();
+    } catch (error) {
+      throw new UnexpectedError();
+    }
   }
 
   async changeEquation(solution, equationId) {
-    const updated = await equationRepository.updateEquation(
-      solution,
-      equationId,
-    );
+    try {
+      const updated = await equationRepository.updateEquation(
+        solution,
+        equationId,
+      );
 
-    if (!updated[0]) {
-      throw new InexistentItem('The equation with this ID does not exist.');
+      if (!updated[0]) {
+        throw new InexistentItem('The equation with this ID does not exist.');
+      }
+
+      return updated[1][0];
+    } catch (error) {
+      if (error instanceof InexistentItem) {
+        throw error;
+      }
+      if (error instanceof ValidationError) {
+        throw new CustomValidationError(error);
+      }
+
+      throw new UnexpectedError();
     }
-
-    return updated[1][0];
   }
 
   async checkSolution(equationId, userSolution) {
-    const { solution } = await equationRepository.getSolutionByEquationId(
-      equationId,
-    );
+    try {
+      const { solution } = await equationRepository.getSolutionByEquationId(
+        equationId,
+      );
 
-    return solution === userSolution;
+      return solution === userSolution;
+    } catch (error) {
+      throw new UnexpectedError();
+    }
   }
 }
 
