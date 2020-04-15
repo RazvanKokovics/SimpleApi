@@ -54,7 +54,7 @@ class UserService {
       }
 
       await userRepository.deleteUser(userName);
-      await expressionRepository.deleteUserFromExpression(user.id);
+      await expressionRepository.deleteUserExpressionByUserId(user.id);
     } catch (error) {
       if (error instanceof InexistentItem) {
         throw error;
