@@ -27,7 +27,7 @@ class UserController {
 
   async deleteUser(request, response) {
     try {
-      const { userId } = request.params;
+      const userId = request.params.id;
 
       await userService.removeUser(userId);
 
@@ -42,7 +42,7 @@ class UserController {
 
   async updateUser(request, response) {
     try {
-      const { userId } = request.params;
+      const userId = request.params.id;
 
       const user = await userService.changeUser(request.body, userId);
 
