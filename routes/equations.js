@@ -13,10 +13,10 @@ router.post('/', verifyToken, adminMiddleware, (req, res, next) =>
 router.get('/', (req, res, next) =>
   equationController.getRandomEquation(req, res, next),
 );
-router.delete('/', verifyToken, adminMiddleware, (req, res, next) =>
+router.delete('/:id', verifyToken, adminMiddleware, (req, res, next) =>
   equationController.deleteEquation(req, res, next),
 );
-router.put('/', verifyToken, adminMiddleware, (req, res, next) =>
+router.put('/:id', verifyToken, adminMiddleware, (req, res, next) =>
   equationController.updateEquation(req, res, next),
 );
 router.get('/all', verifyToken, adminMiddleware, (req, res, next) =>

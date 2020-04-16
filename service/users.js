@@ -43,17 +43,15 @@ class UserService {
     }
   }
 
-  async removeUser(userName) {
+  async removeUser(userId) {
     try {
-      const user = await userRepository.getUserByUserName(userName);
+      const user = await userRepository.getUserById(userId);
 
       if (!user) {
-        throw new InexistentItem(
-          'The user with this username does not exists.',
-        );
+        throw new InexistentItem('The user with this Id does not exists.');
       }
 
-      await userRepository.deleteUser(userName);
+      await userRepository.deleteUser(userId);
       await expressionRepository.deleteUserExpressionByUserId(user.id);
     } catch (error) {
       if (error instanceof InexistentItem) {
@@ -64,13 +62,13 @@ class UserService {
     }
   }
 
-  async changeUser(user, userName) {
+  async changeUser(user, userId) {
     try {
       const { password } = user;
 
       const data = password
-        ? { ...user, password: await hashPassword(password), userName }
-        : { ...user, userName };
+        ? { ...user, password: await hashPassword(password), userId }
+        : { ...user, userId };
 
       const updated = await userRepository.updateUser(data);
 

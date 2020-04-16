@@ -29,7 +29,7 @@ export default () => {
   it('it should not login the user, userName not valid', (done) => {
     const credentials = {
       password: 'password',
-      userName: 'administrator',
+      userName: 'inexistentUserName',
     };
 
     chai
@@ -51,8 +51,8 @@ export default () => {
 
   it('it should not login the user, password is incorrect', (done) => {
     const credentials = {
-      password: 'passwd',
-      userName: 'admin',
+      password: 'incorrect',
+      userName: 'regularUser',
     };
 
     chai

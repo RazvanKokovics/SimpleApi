@@ -13,10 +13,10 @@ router.post('/', verifyToken, (req, res, next) =>
 router.get('/', verifyToken, (req, res, next) =>
   expressionController.getExpressions(req, res, next),
 );
-router.delete('/', verifyToken, (req, res, next) =>
+router.delete('/:id', verifyToken, (req, res, next) =>
   expressionController.deleteExpressionFromUser(req, res, next),
 );
-router.delete('/delete', verifyToken, adminMiddleware, (req, res, next) =>
+router.delete('/delete/:id', verifyToken, adminMiddleware, (req, res, next) =>
   expressionController.deleteExpression(req, res, next),
 );
 

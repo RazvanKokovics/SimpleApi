@@ -10,16 +10,18 @@ chai.should();
 const jwt = ADMIN_TOKEN;
 
 export default () => {
-  it('it should delete user', (done) => {
-    const data = {
-      userName: 'regular',
-    };
+  it('it should delete user', async (done) => {
+    const response = await chai
+      .request(server)
+      .get('/user')
+      .set('auth-token', jwt);
+
+    const userId = response.body[response.body.length - 2].id;
 
     chai
       .request(server)
-      .delete('/user/delete')
+      .delete('/user/delete/' + userId)
       .set('auth-token', jwt)
-      .send(data)
       .end((error, response) => {
         response.should.have.status(200);
 
@@ -31,16 +33,13 @@ export default () => {
       });
   });
 
-  it('it should not delete user, username does not exists', (done) => {
-    const data = {
-      userName: 'inexistent',
-    };
+  it('it should not delete user, userId does not exists', (done) => {
+    const userId = 200000000;
 
     chai
       .request(server)
-      .delete('/user/delete')
+      .delete('/user/delete/' + userId)
       .set('auth-token', jwt)
-      .send(data)
       .end((error, response) => {
         response.should.have.status(404);
 
@@ -48,7 +47,7 @@ export default () => {
         response.body.should.have.property('status').equal('Failure.');
         response.body.should.have
           .property('message')
-          .equal('Username does not exists.');
+          .equal('UserId does not exists.');
 
         done();
       });

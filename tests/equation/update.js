@@ -17,15 +17,14 @@ export default () => {
       .set('auth-token', jwt);
 
     const length = response.body.length;
-
+    const equationId = response.body[length - 1].id;
     const data = {
-      equationId: response.body[length - 1].id,
       solution: '7',
     };
 
     chai
       .request(server)
-      .put('/equations')
+      .put('/equations/' + equationId)
       .set('auth-token', jwt)
       .send(data)
       .end((error, response) => {
@@ -47,14 +46,14 @@ export default () => {
   });
 
   it('it should not update an equation, 404 not found', (done) => {
+    const equationId = '20000000';
     const newEquation = {
-      equationId: '20000000',
       solution: '7',
     };
 
     chai
       .request(server)
-      .put('/equations')
+      .put('/equations/' + equationId)
       .set('auth-token', jwt)
       .send(newEquation)
       .end((error, response) => {
@@ -71,6 +70,7 @@ export default () => {
   });
 
   it('it should not update an equation, token is invalid', (done) => {
+    const equationId = '20000000';
     const newEquation = {
       value: '10+6',
       solution: '16',
@@ -78,7 +78,7 @@ export default () => {
 
     chai
       .request(server)
-      .put('/equations')
+      .put('/equations/' + equationId)
       .set('auth-token', '')
       .send(newEquation)
       .end((error, response) => {

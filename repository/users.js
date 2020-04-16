@@ -9,21 +9,29 @@ class UserRepository {
     return User.create(user);
   }
 
-  deleteUser(userName) {
+  deleteUser(userId) {
     return User.destroy({
       where: {
-        userName,
+        id: userId,
       },
     });
   }
 
   updateUser(user) {
-    const { userName } = user;
+    const { userId } = user;
 
     return User.update(user, {
       returning: true,
       where: {
-        userName,
+        id: userId,
+      },
+    });
+  }
+
+  getUserById(userId) {
+    return User.findOne({
+      where: {
+        id: userId,
       },
     });
   }
