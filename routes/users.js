@@ -13,24 +13,21 @@ router.get('/', verifyToken, adminMiddleware, (req, res, next) =>
 router.post('/register', (req, res, next) =>
   userController.addUser(req, res, next),
 );
-router.delete(
-  '/delete/:userId',
-  verifyToken,
-  adminMiddleware,
-  (req, res, next) => userController.deleteUser(req, res, next),
+router.delete('/delete/:id', verifyToken, adminMiddleware, (req, res, next) =>
+  userController.deleteUser(req, res, next),
 );
-router.put('/update/:userId', verifyToken, adminMiddleware, (req, res, next) =>
+router.put('/update/:id', verifyToken, adminMiddleware, (req, res, next) =>
   userController.updateUser(req, res, next),
 );
 //for regular users
 router.delete(
-  '/delete/account/:userId',
+  '/delete/account/:id',
   verifyToken,
   sameIdMiddleware,
   (req, res, next) => userController.deleteHimself(req, res, next),
 );
 router.put(
-  '/update/account/:userId',
+  '/update/account/:id',
   verifyToken,
   sameIdMiddleware,
   (req, res, next) => userController.updateHimself(req, res, next),

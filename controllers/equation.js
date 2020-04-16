@@ -32,7 +32,7 @@ class EquationController {
 
   async deleteEquation(request, response) {
     try {
-      const { equationId } = request.params;
+      const equationId = request.params.id;
 
       await equationService.removeEquation(equationId);
 
@@ -58,7 +58,7 @@ class EquationController {
   async updateEquation(request, response) {
     try {
       const { solution } = request.body;
-      const { equationId } = request.params;
+      const equationId = request.params.id;
 
       const equation = await equationService.changeEquation(
         solution,
