@@ -1,3 +1,5 @@
+import sequelize from 'sequelize';
+
 import { Expression, User, UserExpression } from '../models';
 
 class ExpressionRepository {
@@ -83,6 +85,16 @@ class ExpressionRepository {
       where: {
         userId,
       },
+    });
+  }
+
+  getUserExpressionsStatisticByExpression() {
+    return UserExpression.findAll({
+      attributes: [
+        'expressionId',
+        [sequelize.fn('COUNT', sequelize.col('expressionId')), 'count'],
+      ],
+      group: 'expressionId',
     });
   }
 }

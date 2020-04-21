@@ -46,6 +46,16 @@ class EquationRepository {
       },
     });
   }
+
+  getEquationSolutionStatistic() {
+    return Equation.findAll({
+      attributes: [
+        'solution',
+        [Sequelize.fn('COUNT', Sequelize.col('solution')), 'count'],
+      ],
+      group: 'solution',
+    });
+  }
 }
 
 export default new EquationRepository();
